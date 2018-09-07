@@ -1,0 +1,60 @@
+.game-container .center{
+	display: table;
+	margin: 2em;
+}
+
+.game-table {
+	display: table-cell;
+	vertical-align: middle;
+	user-select: none;
+	border: 2px solid black;
+}
+
+.game-table.final {
+	border: 0;
+	padding: 2em;
+}
+
+.game-sector {
+	display: inline-block;
+	border: 2px solid black;
+}
+
+.game-sector.final,
+.game-sector.final .game-cell,
+.game-sector.disabled,
+.game-sector.disabled .game-cell {
+	cursor: default;
+}
+
+.game-sector.disabled {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.game-sector.final {
+	border-width: 4px;
+}
+
+.game-cell {
+	display: inline-block;
+	width: 2.5em;
+	height: 2.5em;
+	line-height: 2.5em;
+	text-align: center;
+	vertical-align: middle;
+
+	border: 1px solid black;
+	cursor: default;
+}
+
+.game-cell.selectable {
+	cursor: pointer;
+}
+
+.game-cell.player1 {
+	background: red;
+}
+
+.game-cell.player2 {
+	background: blue;
+}
