@@ -2,6 +2,16 @@
   "name": "reacttictactoe",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "https://roryclaasen.github.io/ReactTicTacToe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roryclaasen/ReactTicTacToe.git"
+  },
+  "author": "Rory Claasen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roryclaasen/ReactTicTacToe/issues"
+  },
   "dependencies": {
     "immutability-helper": "^2.7.1",
     "normalize.css": "^8.0.0",
