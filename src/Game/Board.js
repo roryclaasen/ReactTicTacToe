@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import update from 'immutability-helper';
+// import update from 'immutability-helper';
 import '../Stylesheets/Board.css'
 
 
@@ -16,11 +16,7 @@ export default class Board extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = this.emptyState();
-		this.clickHandler = this.clickHandler.bind(this);
-	}
 
-	emptyState() {
 		var sectorList = [];
 		for (var i = 0; i < NO_SECTORS; i++) {
 			sectorList[i] = {
@@ -28,14 +24,17 @@ export default class Board extends Component {
 				win: -1
 			}
 		}
-
-		return {
+		this.state =  {
 			sectors: sectorList,
 			sectorFinal: new Array(NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
 			currentSector: -1
-		}
+		};
+
+		this.baseState = this.state;
+
+		this.clickHandler = this.clickHandler.bind(this);
 	}
 
 	clickHandler(e) {
