@@ -34,14 +34,14 @@ export default class Board extends Component {
 
 	clickHandler(e) {
 		var location = e.target.dataset.location.split(',');
-		var sectorId = location[0];
-		var cellId = location[1];
+		var sectorId = Number(location[0]);
+		var cellId = Number(location[1]);
 		var currentSector = this.state.currentSector;
 
 		var sectors = this.state.sectors;
 		var sectorFinal = this.state.sectorFinal;
 
-		if (currentSector != -1 && currentSector != sectorId) return;
+		if (currentSector !== -1 && currentSector !== sectorId) return;
 		if (sectors[sectorId].cells[cellId] !== -1) return;
 		sectors[sectorId].cells[cellId] = this.state.current;
 
@@ -53,9 +53,9 @@ export default class Board extends Component {
 
 		var gameWinner = this.calculateWinner(sectorFinal);
 		if (gameWinner !== null) {
-			console.log(gameWinner, 'has won the game!')
+			console.log(gameWinner, 'has won the game!');
 			// TODO Player has won the game
-		}
+		} else gameWinner = -1;
 
 		currentSector = cellId;
 
@@ -72,7 +72,8 @@ export default class Board extends Component {
 			sectors: sectors,
 			sectorFinal: sectorFinal,
 			current: this.state.current === 0 ? 1 : 0,
-			currentSector: currentSector
+			currentSector: currentSector,
+			win: gameWinner
 		});
 	}
 
@@ -96,9 +97,9 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		var message = 'Its ' + (this.state.current == 0 ? 'red' : 'blue') + '\'s turn';
+		var message = 'Its ' + (this.state.current === 0 ? 'red' : 'blue') + '\'s turn';
 		if (this.state.win !== -1) {
-			message = (this.state.win == 0 ? 'red' : 'blue') + ' has won the game!';
+			message = (this.state.win === 0 ? 'red' : 'blue') + ' has won the game!';
 		}
 		// TODO Disable clicking if game has won
 		return (
@@ -164,7 +165,7 @@ class BoardSector extends Component {
 		}
 		var cssClass = 'game-sector';
 		if (this.props.class === "final") cssClass += ' final';
-		if (this.props.currentSector != -1 && this.props.currentSector != this.props.sector) cssClass += ' disabled';
+		if (this.props.currentSector !== -1 && this.props.currentSector !== this.props.sector) cssClass += ' disabled';
 		return (
 			<div className={cssClass}>
 				{rows}
