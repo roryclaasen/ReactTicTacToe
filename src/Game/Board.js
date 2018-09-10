@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 //import update from 'immutability-helper';
-import './Board.css'
+import '../Stylesheets/Board.css'
+
+
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 const NO_SECTORS = 9;
 const NO_CELLS = 9;
@@ -33,6 +39,8 @@ export default class Board extends Component {
 	}
 
 	clickHandler(e) {
+		if (this.state.win !== -1) return;
+
 		var location = e.target.dataset.location.split(',');
 		var sectorId = Number(location[0]);
 		var cellId = Number(location[1]);
@@ -66,7 +74,7 @@ export default class Board extends Component {
 				break;
 			}
 		}
-		if (full) currentSector = - 1;
+		if (full || gameWinner !== -1) currentSector = - 1;
 
 		this.setState({
 			sectors: sectors,
@@ -101,22 +109,30 @@ export default class Board extends Component {
 		if (this.state.win !== -1) {
 			message = (this.state.win === 0 ? 'red' : 'blue') + ' has won the game!';
 		}
-		// TODO Disable clicking if game has won
 		return (
-			<div className="game-container">
-				<h1 className="game-message">{message}</h1>
-				<div className="center">
-					<div className="game-table">
-						{rows}
-					</div>
-					<div className="game-table final">
-						<BoardSector
-							cells={this.state.sectorFinal}
-							class="final"
-						/>
-					</div>
-				</div>
-			</div>
+			<Card className="game-container">
+				<CardContent>
+					<Typography variant="display1" component="h1" color="inherit" className="game-message">
+						{message}
+					</Typography>
+					<Grid
+						container
+						direction="row"
+						justify="center"
+						alignItems="center"
+					>
+						<Grid item className="game-table">
+							{rows}
+						</Grid>
+						<Grid item className="game-table final">
+							<BoardSector
+								cells={this.state.sectorFinal}
+								class="final"
+							/>
+						</Grid>
+					</Grid>
+				</CardContent>
+			</Card>
 		);
 	}
 

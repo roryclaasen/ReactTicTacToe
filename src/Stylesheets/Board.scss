@@ -1,0 +1,48 @@
+$cell-size: 2.5em;
+
+.game-container {
+	margin: 1.5em;
+	// padding: 1em;
+
+	.game-message {
+		text-align: center;
+		margin-bottom: .5em;
+	}
+}
+
+.game-table {
+	user-select: none;
+	border: 2px solid black;
+	// min-width: calc(((#{$cell-size} + 2px) * 9) + 4px);
+
+	&.final {
+		border: 0;
+		padding: 2em;
+	}
+}
+
+.game-sector {
+	display: inline-block;
+	border: 2px solid black;
+	&.final, &.disabled {
+		&, .game-cell { cursor: default; }
+	}
+	&.disabled { background-color: rgba(0, 0, 0, 0.1); }
+	&.final { border-width: 4px; }
+}
+
+.game-cell {
+	display: inline-block;
+	width: $cell-size;
+	height: $cell-size;
+	line-height: $cell-size;
+	text-align: center;
+	vertical-align: middle;
+
+	border: 1px solid black;
+	cursor: default;
+
+	&.selectable { cursor: pointer; }
+	&.player1 { background: red; }
+	&.player2 { background: blue; }
+}
