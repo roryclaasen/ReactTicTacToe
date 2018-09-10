@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import App from './App';
+import App from './Components/App';
 
 ReactDOM.render(
 	<React.Fragment>
