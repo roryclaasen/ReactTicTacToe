@@ -1,3 +1,6 @@
+# Src styling should be Sass/Less
+src/**/*.css
+
 # Logs
 logs
 *.log
