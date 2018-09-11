@@ -49,11 +49,11 @@ export default class Welcome extends Component {
 					<Button size="small" color="primary" onClick={this.props.playOffline}>
 						Pass and Play
         			</Button>
-					<Tooltip title="Not Yet Implemented">
-					<Button size="small" color="primary">
-						Play Online
-        			</Button>
-					</Tooltip>
+					{/* <Tooltip title="Not Yet Implemented"> */}
+						<Button size="small" color="primary">
+							Play Online
+        				</Button>
+					{/* </Tooltip> */}
 				</CardActions>
 			</Card>
 		);

@@ -41,13 +41,13 @@ export default class App extends Component {
 		if (this.state.playing) {
 			currentApp = <Board ref={this.board} key={this.state.boardKey} />;
 			buttonGroup.push(
-				<Button variant="extendedFab" color="primary" aria-label="NewGame" onClick={this.offlineNewGame}>
+				<Button variant="extendedFab" color="primary" aria-label="NewGame" onClick={this.offlineNewGame} key="gamenew">
 					<AddIcon />
 					New Game
 		  		</Button>
 			);
 			buttonGroup.push(
-				<Button variant="extendedFab" color="secondary" aria-label="Exit" onClick={this.offlineLeave}>
+				<Button variant="extendedFab" color="secondary" aria-label="Exit" onClick={this.offlineLeave} key="gameexit">
 					<CloseIcon />
 					Exit
 		  		</Button>
