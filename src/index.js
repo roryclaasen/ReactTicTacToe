@@ -5,6 +5,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import App from './Components/App';
 
+import SocketClient from './client';
+
+var socket = new SocketClient();
+
 ReactDOM.render(
 	<React.Fragment>
 		<CssBaseline />

@@ -7,11 +7,10 @@ cache:
 script:
   - npm run build
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  local-dir: build
-  committer-from-gh: true
-  on:
-    branch: master
+  provider: heroku
+  api_key:
+    secure: $HEROKU_TOKEN
+  app: 
+    master: u-tictactoe
+    dev: u-tictactoe-dev
+  skip_cleanup: true

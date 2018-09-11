@@ -36,7 +36,6 @@ export default class App extends Component {
 		this.setState({ online: false, playing: true });
 	}
 
-
 	render() {
 		var currentApp;
 		var buttonGroup = [];
