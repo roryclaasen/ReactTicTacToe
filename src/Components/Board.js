@@ -104,9 +104,12 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		var message = 'Its ' + (this.state.current === 0 ? 'red' : 'blue') + '\'s turn';
+		var color = this.state.current === 0 ? 'red' : 'blue';
+		var message = 'Its ' + color + '\'s turn';
+		var tableClass = 'game-table player' + (this.state.current + 1);
 		if (this.state.win !== -1) {
-			message = (this.state.win === 0 ? 'red' : 'blue') + ' has won the game!';
+			message = color + ' has won the game!';
+			tableClass = 'game-table finished'
 		}
 		return (
 			<Card className="game-container">
@@ -120,7 +123,7 @@ export default class Board extends Component {
 						justify="center"
 						alignItems="center"
 					>
-						<Grid item className="game-table">
+						<Grid item className={tableClass}>
 							{rows}
 						</Grid>
 						<Grid item className="game-table final">
@@ -159,12 +162,14 @@ export default class Board extends Component {
 class BoardSector extends Component {
 
 	render() {
+		var validSector = this.props.currentSector === -1 || this.props.currentSector === this.props.sector;
 		var cells = [];
 		for (var i = 0; i < NO_CELLS; i++) {
 			var key = this.props.sector + ',' + i;
 			var value = this.props.cells[i];
 			cells.push(<BoardCell
 				value={value}
+				valid={validSector && !(this.props.class === "final")}
 				location={key}
 				key={key}
 				onClick={this.props.click}
@@ -180,7 +185,7 @@ class BoardSector extends Component {
 		}
 		var cssClass = 'game-sector';
 		if (this.props.class === "final") cssClass += ' final';
-		if (this.props.currentSector !== -1 && this.props.currentSector !== this.props.sector) cssClass += ' disabled';
+		if (!validSector) cssClass += ' disabled';
 		return (
 			<div className={cssClass}>
 				{rows}
@@ -192,7 +197,8 @@ class BoardSector extends Component {
 class BoardCell extends Component {
 	render() {
 		var value = this.props.value;
-		var cssClass = 'game-cell ' + (value === -1 ? 'selectable' : (value === 0 ? 'player1' : 'player2'));
+		var validCell = this.props.valid;
+		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable': '') : (value === 0 ? 'player1' : 'player2'));
 		return (
 			<div className={cssClass} data-location={this.props.location} onClick={this.props.onClick}></div>
 		);
