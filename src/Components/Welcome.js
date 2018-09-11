@@ -6,8 +6,6 @@ import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
-import Tooltip from '@material-ui/core/Tooltip';
-
 export default class Welcome extends Component {
 	render() {
 		var headingStyle = {
@@ -49,11 +47,9 @@ export default class Welcome extends Component {
 					<Button size="small" color="primary" onClick={this.props.playOffline}>
 						Pass and Play
         			</Button>
-					{/* <Tooltip title="Not Yet Implemented"> */}
-						<Button size="small" color="primary">
-							Play Online
-        				</Button>
-					{/* </Tooltip> */}
+					<Button size="small" color="primary" disabled >
+						Play Online
+        			</Button>
 				</CardActions>
 			</Card>
 		);

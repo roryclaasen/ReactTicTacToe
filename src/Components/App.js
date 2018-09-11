@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 
+import ThemeManager from './Theme';
 import Welcome from './Welcome';
 import Board from './Board';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@material-ui/icons/Close';
+// import CodeIcon from '@material-ui/icons/Code';
 
 import '../Stylesheets/App.css';
 
@@ -31,7 +33,7 @@ export default class App extends Component {
 	}
 
 	offlineJoin = () => {
-		this.setState({ online:false, playing: true });
+		this.setState({ online: false, playing: true });
 	}
 
 
@@ -41,13 +43,13 @@ export default class App extends Component {
 		if (this.state.playing) {
 			currentApp = <Board ref={this.board} key={this.state.boardKey} />;
 			buttonGroup.push(
-				<Button variant="extendedFab" color="primary" aria-label="NewGame" onClick={this.offlineNewGame} key="gamenew">
+				<Button variant="extendedFab" color="primary" className="btn" aria-label="NewGame" onClick={this.offlineNewGame} key="gamenew">
 					<AddIcon />
 					New Game
 		  		</Button>
 			);
 			buttonGroup.push(
-				<Button variant="extendedFab" color="secondary" aria-label="Exit" onClick={this.offlineLeave} key="gameexit">
+				<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.offlineLeave} key="gameexit">
 					<CloseIcon />
 					Exit
 		  		</Button>
@@ -57,9 +59,14 @@ export default class App extends Component {
 			currentApp = <Welcome
 				playOffline={this.offlineJoin}
 			/>;
+			// buttonGroup.push(
+			// 	<Button variant="fab" color="primary" className="btn" aria-label="Code" href="https://github.com/roryclaasen/ReactTicTacToe" key="source">
+			// 		<CodeIcon />
+			// 	</Button>
+			// );
 		}
 		return (
-			<div>
+			<ThemeManager>
 				<Grid
 					container
 					direction="row"
@@ -74,7 +81,7 @@ export default class App extends Component {
 				<div className="floatingButtons">
 					{buttonGroup}
 				</div>
-			</div>
+			</ThemeManager>
 		);
 	}
 }

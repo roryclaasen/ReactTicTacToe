@@ -13,7 +13,8 @@
 	bottom: 2em;
 	right: 2em;
 
-	button {
-		margin-left:1em;
+	a, button {
+		&.btn { margin-left: 1em; }
+		&.btn:only-child { margin-left: 0; }
 	}
 }
