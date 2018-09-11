@@ -8,6 +8,7 @@ import App from './Components/App';
 import SocketClient from './client';
 
 var socket = new SocketClient();
+socket.temp();
 
 ReactDOM.render(
 	<React.Fragment>
