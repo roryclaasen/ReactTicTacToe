@@ -47,7 +47,7 @@ export default class Welcome extends Component {
 					<Button size="small" color="primary" onClick={this.props.playOffline}>
 						Pass and Play
         			</Button>
-					<Button size="small" color="primary" disabled >
+					<Button size="small" color="primary">
 						Play Online
         			</Button>
 				</CardActions>
