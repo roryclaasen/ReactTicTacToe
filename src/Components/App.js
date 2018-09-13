@@ -150,9 +150,9 @@ export default class App extends Component {
 			if (this.state.online === false) {
 				currentApp = <Board ref={this.board} key={this.state.boardKey} />;
 				buttonGroup.push(
-					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.offlineLeave} key="gameexit">
-						<CloseIcon />
-						Exit
+					<Button variant="extendedFab" color="primary" className="btn" aria-label="New Game" onClick={this.offlineNewGame} key="gamenew">
+						<AddIcon />
+						New Game
 		  			</Button>
 				);
 				buttonGroup.push(
@@ -170,8 +170,7 @@ export default class App extends Component {
 		  			</Button>
 				);
 			}
-		}
-		else {
+		} else {
 			if (this.state.online) {
 				currentApp = <Connect
 					cancel={this.onlineLeave}
