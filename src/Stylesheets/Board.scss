@@ -3,8 +3,12 @@ $player1: red;
 $player2: blue;
 
 .game-container {
-	margin: 1.5em;
+	margin: auto;
 	// padding: 1em;
+	width: max-content;
+	width: -moz-max-content;
+	width: -webkit-max-content;
+	padding: 1em;
 
 	.game-message {
 		text-align: center;
