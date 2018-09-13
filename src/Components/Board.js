@@ -29,7 +29,8 @@ export default class Board extends Component {
 			sectorFinal: new Array(NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
-			currentSector: -1
+			currentSector: -1,
+			players: undefined
 		};
 
 		this.baseState = this.state;
@@ -104,11 +105,12 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		var color = this.state.current === 0 ? 'red' : 'blue';
-		var message = 'Its ' + color + '\'s turn';
+		var name = this.state.current === 0 ? 'red' : 'blue';
+		if (this.state.players !== undefined) name = this.state.players[this.state.current].username;
+		var message = 'Its ' + name + '\'s turn';
 		var tableClass = 'game-table player' + (this.state.current + 1);
 		if (this.state.win !== -1) {
-			message = color + ' has won the game!';
+			message = name + ' has won the game!';
 			tableClass = 'game-table finished'
 		}
 		return (

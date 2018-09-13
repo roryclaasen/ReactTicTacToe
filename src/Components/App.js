@@ -105,7 +105,8 @@ export default class App extends Component {
 
 	onlineGameUpdate = (game) => {
 		if (game.players.length === 2) {
-			this.setState({ online: true, playing: true });
+			this.setState({ online: true, playing: true });			
+			this.board.current.updateData(game);
 		} else {
 			this.setState({
 				dialog: {

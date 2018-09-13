@@ -6,6 +6,8 @@ module.exports = {
 		disconnected: 'lobby.left'
 	},
 	game: {
-		started: 'game.start'
+		started: 'game.start',
+		click: 'game.click',
+		update: 'game.update'
 	}
 };

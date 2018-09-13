@@ -1,3 +1,7 @@
+const NO_SECTORS = 9;
+const NO_CELLS = 9;
+const NO_IN_ROW = 3;
+
 class GameManager {
 	constructor() {
 		this.games = {};
@@ -39,6 +43,19 @@ class Game {
 		this.token = token;
 		this.players = [];
 		this.spectators = [];
+
+		var sectorList = [];
+		for (var i = 0; i < NO_SECTORS; i++) {
+			sectorList[i] = {
+				cells: new Array(NO_CELLS).fill(-1),
+				win: -1
+			}
+		}
+		this.sectors = sectorList;
+		this.sectorFinal = new Array(NO_CELLS).fill(-1);
+		this.win = -1;
+		this.current = 0;
+		this.currentSector = -1;
 	}
 
 	addPlayer(username, uid) {
@@ -63,7 +80,13 @@ class Game {
 		return {
 			token: this.token,
 			players: this.players,
-			spectators: this.spectators
+			spectators: this.spectators,
+			sectors: this.sectors,
+			final: this.sectorFinal,
+			win: this.win,
+			current: this.current,
+			currentSector: this.currentSector
+
 		}
 	}
 }

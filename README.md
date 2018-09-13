@@ -4,10 +4,10 @@ Based off my old java project [Tic Tac Toe (java)](https://github.com/roryclaase
 
 ## Play
 
-You can play the game online in your browser [here](https://u-tictactoe.herokuapp.com/).
+You can play the game online in your browser [here](https://roryclaasen.github.io/ReactTicTacToe).
 Note that there may be increased page loading time on first load as the server may need to start.
 
-[Development server](https://u-tictactoe-dev.herokuapp.com/) (Test the latest features or it may not even work yet)
+[Development server](https://roryclaasen.github.io/ReactTicTacToe-dev) (Test the latest features or it may not even work yet)
 
 ## About
 
