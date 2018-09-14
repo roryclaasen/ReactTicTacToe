@@ -75,6 +75,13 @@ io.on('connection', function (socket) {
 
 		token = undefined;
 	});
+
+	socket.on(commands.game.click, function(data) {
+		if (token !== data.token) return;
+		manager.getGame(token).click(data.sector, data.cell);
+		
+		io.in(token).emit(commands.game.update, manager.getGame(token));
+	});
 });
 
 server.listen(port, function () {

@@ -89,6 +89,7 @@ export default class Board extends Component {
 		var sectors = [];
 		for (var i = 0; i < NO_SECTORS; i++) {
 			var key = 's' + i;
+			
 			sectors.push(<BoardSector
 				cells={this.state.sectors[i].cells}
 				sector={i}

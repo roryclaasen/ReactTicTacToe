@@ -105,7 +105,7 @@ export default class App extends Component {
 
 	onlineGameUpdate = (game) => {
 		if (game.players.length === 2) {
-			this.setState({ online: true, playing: true });			
+			this.setState({ online: true, playing: true });
 			this.board.current.updateData(game);
 		} else {
 			this.setState({
@@ -149,7 +149,10 @@ export default class App extends Component {
 		var buttonGroup = [];
 		if (this.state.playing) {
 			if (this.state.online === false) {
-				currentApp = <Board ref={this.board} key={this.state.boardKey} />;
+				currentApp = <Board
+					ref={this.board}
+					key={this.state.boardKey}
+				/>;
 				buttonGroup.push(
 					<Button variant="extendedFab" color="primary" className="btn" aria-label="New Game" onClick={this.offlineNewGame} key="gamenew">
 						<AddIcon />
@@ -163,7 +166,10 @@ export default class App extends Component {
 		  			</Button>
 				);
 			} else {
-				currentApp = <OnlineBoard ref={this.board} />
+				currentApp = <OnlineBoard
+					ref={this.board}
+					click={this.socket.click}
+				/>
 				buttonGroup.push(
 					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.onlineLeave} key="gameexit">
 						<CloseIcon />
@@ -220,9 +226,9 @@ export default class App extends Component {
 					</DialogContent>
 					<DialogActions>
 						{this.state.dialog.disagree !== undefined &&
-						<Button onClick={this.handleDialogClose} color="primary">
-							{this.state.dialog.disagree}
-						</Button>
+							<Button onClick={this.handleDialogClose} color="primary">
+								{this.state.dialog.disagree}
+							</Button>
 						}
 						<Button onClick={(e) => this.handleDialogClose(true)} color="primary" autoFocus>
 							{this.state.dialog.agree}

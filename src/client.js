@@ -11,11 +11,11 @@ export default class SocketClient {
 		this.updateGameHandler = undefined;
 
 		this.socket.on(commands.game.started, this.updateGame);
+		this.socket.on(commands.game.update, this.updateGame);
 		this.socket.on(commands.lobby.disconnected, this.updateGame);
 	}
 
 	updateGame = (game) => {
-		console.log(game);
 		if (this.token !== game.token) return;
 		this.gameData = game;
 		if (this.updateGameHandler !== undefined) {
@@ -45,5 +45,16 @@ export default class SocketClient {
 
 	leaveGame = () => {
 		this.socket.emit(commands.lobby.leave, this.token);
+	}
+
+	click = (sector, cell, cb) => {
+		this.socket.emit(commands.game.started, {
+			token: this.token,
+			sector: sector,
+			cell: cell
+		}, (data) => {
+			this.gameData = data;
+			cb(data);
+		});
 	}
 }
