@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 
 export default class Connect extends Component {
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -26,6 +26,7 @@ export default class Connect extends Component {
 	}
 
 	gameJoin = () => {
+		if (!this.validToken()) return;
 		this.setState({ allowTokenInput: false, allowNameInput: false });
 		this.props.join(this.state.username, this.state.token.toString(), (data) => {
 			// Failed to join
@@ -45,11 +46,11 @@ export default class Connect extends Component {
 	}
 
 	usernameChange = (e) => {
-		this.setState({ username: e.target.value });		
+		this.setState({ username: e.target.value });
 	}
 
 	tokenChange = (e) => {
-		this.setState({ token: e.target.value });		
+		this.setState({ token: e.target.value });
 	}
 
 	validUsername() {

@@ -48,7 +48,7 @@ export default class SocketClient {
 	}
 
 	click = (sector, cell, cb) => {
-		this.socket.emit(commands.game.started, {
+		this.socket.emit(commands.game.click, {
 			token: this.token,
 			sector: sector,
 			cell: cell

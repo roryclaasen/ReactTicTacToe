@@ -77,8 +77,10 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on(commands.game.click, function(data) {
+		console.log(data);
+		
 		if (token !== data.token) return;
-		manager.getGame(token).click(data.sector, data.cell);
+		manager.getGame(token).click(data.sector, data.cell, socket.id);
 		
 		io.in(token).emit(commands.game.update, manager.getGame(token));
 	});

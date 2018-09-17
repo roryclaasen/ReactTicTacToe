@@ -76,10 +76,13 @@ class Game {
 		}
 	}
 
-	click(sectorId, cellId) {
+	click(sectorId, cellId, clientId) {
+		var player = this.players[this.current];
+		// May throw if current is not 0/1
+		if (player.id !== clientId) return;
 		if (this.win !== -1) return;
 
-		if (this.current !== -1 && this.current !== sectorId) return;
+		if (this.currentSector !== -1 && this.currentSector !== sectorId) return;
 		var sector = this.sectors[sectorId];
 
 		if (sector.cells[cellId] !== -1) return;
@@ -87,16 +90,34 @@ class Game {
 		sector.cells[cellId] = this.current;
 		this.current = this.current === 0 ? 1 : 0;
 
-		var sectorWinner = this.calculateWinner(sector.cells);
-		if (sectorWinner !== null) {
-			sector.win = sectorWinner;
-			this.sectorFinal[sectorId] = sectorWinner;
+		this.currentSector = cellId;
+
+		if (sector.win === -1) {
+			var sectorWinner = this.calculateWinner(sector.cells);
+			if (sectorWinner !== null) {
+				sector.win = sectorWinner;
+				this.sectorFinal[sectorId] = sectorWinner;
+			}
 		}
 
-		var gameWinner = this.calculateWinner(sectorFinal);
-		if (gameWinner !== null) {
-			this.win = gameWinner;
+		var gameWinner = -1;
+		if (this.win === -1) {
+			gameWinner = this.calculateWinner(this.sectorFinal);
+			if (gameWinner !== null) {
+				this.win = gameWinner;
+			}
 		}
+
+		var full = true;
+		for (var i = 0; i < NO_CELLS; i++) {
+			if (sector.cells[i] === -1) {
+				full = false;
+				break;
+			}
+		}
+
+		if (full || gameWinner !== null) this.currentSector = -1;
+		
 		this.sectors[sectorId] = sector;
 	}
 
