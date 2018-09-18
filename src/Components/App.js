@@ -169,6 +169,7 @@ export default class App extends Component {
 				currentApp = <OnlineBoard
 					ref={this.board}
 					click={this.socket.click}
+					id={this.socket.socketId}
 				/>
 				buttonGroup.push(
 					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.onlineLeave} key="gameexit">

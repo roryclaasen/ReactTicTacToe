@@ -37,7 +37,9 @@ io.on('connection', function (socket) {
 			game.addPlayer(username, socket.id);
 			socket.join(game.token);
 			token = game.token;
-			fn(game.forClient());
+			var gameReturn = game.forClient();
+			gameReturn.socketId = socket.id;
+			fn(gameReturn);
 			console.log('%s has made a new game %s', socket.id, token);
 		});
 	});
@@ -50,6 +52,9 @@ io.on('connection', function (socket) {
 			manager.joinGame(token, username, socket.id, (game) => {
 				socket.join(token);
 				if (game.players.length == 2) {
+					var gameReturn = game.forClient();
+					gameReturn.socketId = socket.id;
+					fn(gameReturn);
 					io.in(token).emit(commands.game.started, game);
 					console.log('%s has joined game %s as a player', socket.id, token);
 				} else {
@@ -65,7 +70,7 @@ io.on('connection', function (socket) {
 	socket.on(commands.lobby.leave, function (dToken) {
 		if (token !== dToken) return;
 		manager.getGame(token).removePlayer(socket.id);
-		socket.to(token).emit(commands.lobby.disconnected, manager.getGame(token));
+		socket.to(token).emit(commands.lobby.disconnected, manager.getGame(token).forClient());
 		socket.leave(token);
 		console.log('%s leaving game %s', socket.id, token);
 		if (manager.getGame(token).players.length === 0) {
@@ -76,13 +81,11 @@ io.on('connection', function (socket) {
 		token = undefined;
 	});
 
-	socket.on(commands.game.click, function(data) {
-		console.log(data);
-		
+	socket.on(commands.game.click, function(data) {		
 		if (token !== data.token) return;
 		manager.getGame(token).click(data.sector, data.cell, socket.id);
 		
-		io.in(token).emit(commands.game.update, manager.getGame(token));
+		io.in(token).emit(commands.game.update, manager.getGame(token).forClient());
 	});
 });
 

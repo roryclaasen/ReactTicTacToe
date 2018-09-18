@@ -141,7 +141,7 @@ class Game {
 		return null;
 	}
 
-	forClient() {
+	forClient(id) {
 		return {
 			token: this.token,
 			players: this.players,
@@ -151,7 +151,6 @@ class Game {
 			win: this.win,
 			current: this.current,
 			currentSector: this.currentSector
-
 		}
 	}
 }

@@ -7,12 +7,18 @@ export default class SocketClient {
 		this.socket = io();
 		//this.token = undefined;
 		this.gameData = undefined;
+		this.socketId = undefined;
 
 		this.updateGameHandler = undefined;
 
 		this.socket.on(commands.game.started, this.updateGame);
 		this.socket.on(commands.game.update, this.updateGame);
 		this.socket.on(commands.lobby.disconnected, this.updateGame);
+	}
+
+	setSocketId(id) {
+		if (this.socketId !== undefined) return;
+		this.socketId = id;
 	}
 
 	updateGame = (game) => {
@@ -27,6 +33,7 @@ export default class SocketClient {
 		this.socket.emit(commands.lobby.make, username, (data) => {
 			this.gameData = data;
 			this.token = data.token;
+			this.setSocketId(data.socketId);
 			cb(data);
 		});
 	}
@@ -39,6 +46,7 @@ export default class SocketClient {
 		}, (data) => {
 			this.gameData = data;
 			this.token = data.token;
+			this.setSocketId(data.socketId);
 			cb(data);
 		});
 	}

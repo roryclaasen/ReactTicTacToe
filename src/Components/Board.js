@@ -85,6 +85,15 @@ export default class Board extends Component {
 		});
 	}
 
+	gameMessage() {
+		var name = this.state.current === 0 ? 'red' : 'blue';
+		var message = 'Its ' + name + '\'s turn';
+		if (this.state.win !== -1) {
+			message = name + ' has won the game!';
+		}
+		return message;
+	}
+
 	render() {
 		var sectors = [];
 		for (var i = 0; i < NO_SECTORS; i++) {
@@ -106,14 +115,12 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		var name = this.state.current === 0 ? 'red' : 'blue';
-		if (this.state.players !== undefined) name = this.state.players[this.state.current].username;
-		var message = 'Its ' + name + '\'s turn';
+		
 		var tableClass = 'game-table player' + (this.state.current + 1);
 		if (this.state.win !== -1) {
-			message = name + ' has won the game!';
-			tableClass = 'game-table finished'
+			tableClass = 'game-table finished';
 		}
+		var message = this.gameMessage();
 		return (
 			<Card className="game-container">
 				<CardContent>

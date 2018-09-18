@@ -21,7 +21,8 @@ export default class Connect extends Component {
 			token: '',
 			allowTokenInput: true,
 			allowNameInput: true,
-			disableButtons: false
+			disableButtons: false,
+			tokenHelp: 'Token needs to be 6 characters long'
 		}
 	}
 
@@ -37,21 +38,27 @@ export default class Connect extends Component {
 		this.setState({ allowTokenInput: false, allowNameInput: false });
 
 		this.props.make(this.state.username, (data) => {
-			this.setState({ token: data.token, disableButtons: true });
+			this.setState({
+				token: data.token,
+				disableButtons: true,
+				tokenHelp: 'Share this token with your friend'
+			});
 		});
 	}
 
 	changeUsername = () => {
-		this.setState({ allowTokenInput: true, allowNameInput: true, token: '' });
+		// TODO if game made then remove
+		this.setState({
+			allowTokenInput: true,
+			allowNameInput: true,
+			token: '',
+			tokenHelp: 'Token needs to be 6 characters long'
+		});
 	}
 
-	usernameChange = (e) => {
-		this.setState({ username: e.target.value });
-	}
 
-	tokenChange = (e) => {
-		this.setState({ token: e.target.value });
-	}
+	usernameChange = (e) => this.setState({ username: e.target.value });
+	tokenChange = (e) => this.setState({ token: e.target.value });
 
 	validUsername() {
 		return this.state.username.length >= 3;
@@ -105,7 +112,7 @@ export default class Connect extends Component {
 								onChange={this.tokenChange}
 								style={inputStyles}
 								type="number"
-								helperText="Token needs to be 6 characters long"
+								helperText={this.state.tokenHelp}
 								error={!this.validToken() && this.state.token.length > 0}
 								disabled={!this.validUsername() || !this.state.allowTokenInput}
 							/>
