@@ -14,7 +14,7 @@ Note that there may be increased page loading time on first load as the server m
 Tic-tac-toe is a simple, 2-player, strategy game played on a board of 9 cells set out in a 3x3 square. 
 The first player
 places an "X" an any cell.
-The second player places an "0" in any remaining cell. The players continue taking turns placing their mark in remaining cells. 
+The second player places an "0" in any remaining cell. The players continue taking turns placing their mark in remaining cells.
 The winner is the first player to place three of his marks in a row, column, or diagonal.
 
 Ultimate Tic-Tac-Toe then takes this a step further and is a 2-player computer game played on a game board comprising nine tic-tac-toe games set out in nine mini-squares within a 3x3 greater-square. 

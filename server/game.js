@@ -1,6 +1,5 @@
 const NO_SECTORS = 9;
 const NO_CELLS = 9;
-const NO_IN_ROW = 3;
 
 class GameManager {
 	constructor() {
@@ -8,7 +7,16 @@ class GameManager {
 	}
 
 	isInGame(socketId) {
-		return this.games.find(g => g.hasPlayer(socketId));
+		var game = undefined;
+		for (const token of Object.keys(this.games)) {
+			if (game !== undefined) break;
+			const value = this.games[token];
+			if (value.hasPlayer(socketId)) {
+				game = value;
+				break;
+			}
+		}
+		return game;
 	}
 
 	hasGame(token) {
@@ -17,7 +25,7 @@ class GameManager {
 
 	make(uid, cb) {
 		var oldGame = this.isInGame(uid);
-		if (oldGame !== undefined || oldGame !== null) {
+		if (oldGame !== undefined && oldGame !== null) {
 			this.removeGame(oldGame.token);
 		}
 		var token;
@@ -122,7 +130,7 @@ class Game {
 		}
 
 		var full = true;
-		for (var i = 0; i < NO_CELLS; i++) {
+		for (var i = 0; i < sector.cells.length; i++) {
 			if (sector.cells[i] === -1) {
 				full = false;
 				break;

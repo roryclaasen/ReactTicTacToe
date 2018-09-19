@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default class Connect extends Component {
 
@@ -19,7 +20,8 @@ export default class Connect extends Component {
 			allowTokenInput: true,
 			allowNameInput: true,
 			disableButtons: false,
-			tokenHelp: 'Token needs to be 6 characters long'
+			tokenHelp: 'Token needs to be 6 characters long',
+			waiting: false
 		}
 	}
 
@@ -38,7 +40,8 @@ export default class Connect extends Component {
 			this.setState({
 				token: data.token,
 				disableButtons: true,
-				tokenHelp: 'Share this token with your friend'
+				tokenHelp: 'Share this token with your friend',
+				waiting: true
 			});
 		});
 	}
@@ -50,7 +53,8 @@ export default class Connect extends Component {
 			allowNameInput: true,
 			token: '',
 			tokenHelp: 'Token needs to be 6 characters long',
-			disableButtons: false
+			disableButtons: false,
+			waiting: false
 		});
 	}
 
@@ -116,6 +120,21 @@ export default class Connect extends Component {
 							/>
 						</Grid>
 					</Grid>
+					{this.state.waiting &&
+						<div>
+							<Grid container justify="center">
+								<Grid item>
+									<Typography variant="display1">
+										{this.state.token}
+									</Typography>
+									<Typography variant="subheading">
+										Waiting for opponent to join
+									</Typography>
+								</Grid>
+							</Grid>
+							<LinearProgress variant="query" color="secondary" />
+						</div>
+					}
 				</CardContent>
 				<CardActions>
 					<Button size="small" color="primary" onClick={this.props.cancel}>

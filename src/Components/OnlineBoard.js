@@ -22,10 +22,11 @@ export default class OnlinceBoard extends Board {
 	gameMessage() {
 		if (this.state.players === undefined) return super.gameMessage();
 		var playerId = this.state.players.findIndex(p => p.id === this.props.id);
-		console.log(playerId, this.state.current, this.state.playerId === this.state.current);
+
 		var isMe = playerId === this.state.current;
 		var name = this.state.players[this.state.current].username;
 		var message = 'Its ' + (isMe ? 'your' : name + '\'s') + ' turn';
+
 		if (this.state.win !== -1) message = (isMe ? 'You have'  : name + ' has') + ' won the game!';
 		return message;
 	}

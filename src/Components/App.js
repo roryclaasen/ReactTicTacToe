@@ -8,6 +8,9 @@ import OnlineBoard from './OnlineBoard';
 
 import SocketClient from './../client';
 
+import copy from 'copy-to-clipboard';
+
+import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -97,6 +100,7 @@ export default class App extends Component {
 
 	onlineMake = (username, cb) => {
 		this.socket.createGame(username, cb);
+		// Trigger render to show token
 	}
 
 	onlineJoin = (username, token, cb) => {
@@ -144,6 +148,8 @@ export default class App extends Component {
 		}
 	}
 
+	onlineCopyToken = () => copy(this.socket.token);
+
 	render() {
 		var currentApp;
 		var buttonGroup = [];
@@ -172,6 +178,13 @@ export default class App extends Component {
 					id={this.socket.socketId}
 				/>
 				buttonGroup.push(
+					<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
+						<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={this.onlineCopyToken}>
+							Token: {this.socket.token}
+						</Button>
+					</Tooltip>
+				);
+				buttonGroup.push(
 					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.onlineLeave} key="gameexit">
 						<CloseIcon />
 						Leave
@@ -184,7 +197,16 @@ export default class App extends Component {
 					cancel={this.onlineLeave}
 					make={this.onlineMake}
 					join={this.onlineJoin}
-				/>
+				/>;
+				if (this.socket.gameData !== undefined) {
+					buttonGroup.push(
+						<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
+							<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={this.onlineCopyToken}>
+								Token: {this.socket.gameData.token}
+							</Button>
+						</Tooltip>
+					);
+				}
 			} else {
 				currentApp = <Welcome
 					playOffline={this.offlineJoin}
