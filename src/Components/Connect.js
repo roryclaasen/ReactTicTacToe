@@ -5,10 +5,7 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-
 import Grid from '@material-ui/core/Grid';
-
-
 import TextField from '@material-ui/core/TextField';
 
 export default class Connect extends Component {
@@ -52,7 +49,8 @@ export default class Connect extends Component {
 			allowTokenInput: true,
 			allowNameInput: true,
 			token: '',
-			tokenHelp: 'Token needs to be 6 characters long'
+			tokenHelp: 'Token needs to be 6 characters long',
+			disableButtons: false
 		});
 	}
 
@@ -80,7 +78,7 @@ export default class Connect extends Component {
 						Play Online
 					</Typography>
 					<Typography component="p">
-
+						{/* TODO: Write a help section or instructions of how to use */}
 					</Typography>
 					<Grid container spacing={24}>
 						<Grid item md={6}>

@@ -7,11 +7,19 @@ class GameManager {
 		this.games = {};
 	}
 
+	isInGame(socketId) {
+		return this.games.find(g => g.hasPlayer(socketId));
+	}
+
 	hasGame(token) {
 		return token in this.games;
 	}
 
-	make(cb) {
+	make(uid, cb) {
+		var oldGame = this.isInGame(uid);
+		if (oldGame !== undefined || oldGame !== null) {
+			this.removeGame(oldGame.token);
+		}
 		var token;
 		do {
 			token = (Math.floor(Math.random() * 900000) + 100000).toString();
@@ -65,6 +73,11 @@ class Game {
 		}
 		if (this.players.length >= 2) this.spectators.push(player);
 		else this.players.push(player);
+	}
+
+	hasPlayer(uid) {
+		var player = this.players.findIndex(p => p.id === uid);
+		return player >= 0;
 	}
 
 	removePlayer(uid) {
