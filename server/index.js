@@ -45,6 +45,7 @@ io.on('connection', function (socket) {
 
 	socket.on(commands.lobby.make, function (username, fn) {
 		try {
+			throw new Exception('Yeah an Error!');
 			manager.make(socket.token, (game) => {
 				game.addPlayer(username, socket.id);
 				socket.join(game.token);
@@ -60,6 +61,11 @@ io.on('connection', function (socket) {
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.lobby.make);
 			(console.error || console.log).call(console, e.stack || e);
+
+			fn({ error: {
+				type: 'stack',
+				stack: e
+			}});
 		}
 	});
 
@@ -87,10 +93,20 @@ io.on('connection', function (socket) {
 				});
 			} else {
 				// TODO error
+				fn({ error: {
+					type: 'msg',
+					message: 'No game exists with token ' + ftoken,
+					token: ftoken
+				}});
 			}
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.lobby.join);
 			(console.error || console.log).call(console, e.stack || e);
+
+			fn({ error: {
+				type: 'stack',
+				stack: e
+			}});
 		}
 	});
 
@@ -125,6 +141,11 @@ io.on('connection', function (socket) {
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.game.click);
 			(console.error || console.log).call(console, e.stack || e);
+
+			fn({ error: {
+				type: 'stack',
+				stack: e
+			}});
 		}
 	});
 });

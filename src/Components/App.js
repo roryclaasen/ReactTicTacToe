@@ -24,6 +24,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import '../Stylesheets/App.css';
+import 'izitoast/dist/css/iziToast.min.css';
 
 export default class App extends Component {
 	constructor(props) {

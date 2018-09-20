@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
 import * as commands from './socket.commands';
 
+import izitoast from 'izitoast';
+
 export default class SocketClient {
 
 	constructor() {
@@ -31,9 +33,14 @@ export default class SocketClient {
 
 	createGame = (username, cb) => {
 		this.socket.emit(commands.lobby.make, username, (data) => {
-			this.gameData = data;
-			this.token = data.token;
-			this.setSocketId(data.socketId);
+			if (!data.error) {
+				this.gameData = data;
+				this.token = data.token;
+				this.setSocketId(data.socketId);
+			} else {
+				izitoast.error({ message: 'Unable to create game, please try again' });
+				// console.log(data.error.stack);
+			}
 			cb(data);
 		});
 	}
@@ -44,9 +51,21 @@ export default class SocketClient {
 			username: username,
 			token: token
 		}, (data) => {
-			this.gameData = data;
-			this.token = data.token;
-			this.setSocketId(data.socketId);
+			if (!data.error) {
+				this.gameData = data;
+				this.token = data.token;
+				this.setSocketId(data.socketId);
+			} else {
+				if (data.error.type === 'msg') {
+					izitoast.warning({
+						title: 'Unable to join game',
+						message: data.error.message
+					});
+				} else {
+					izitoast.error({ message: 'Unable to create game, please try again' });
+					// console.log(data.error.stack);
+				}
+			}
 			cb(data);
 		});
 	}
@@ -61,7 +80,12 @@ export default class SocketClient {
 			sector: sector,
 			cell: cell
 		}, (data) => {
-			this.gameData = data;
+			if (!data.error) {
+				this.gameData = data;
+			} else {
+				izitoast.error({ message: 'Unable to place tile' });
+				// console.log(data.error.stack);
+			}
 			cb(data);
 		});
 	}
