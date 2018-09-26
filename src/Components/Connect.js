@@ -86,9 +86,6 @@ export default class Connect extends Component {
 		var cardStyles = {
 			textAlign: 'center'
 		}
-		var headingStyle = {
-			fontWeight: 'normal'
-		}
 		var cardContent;
 		if (this.state.waiting) {
 			cardContent = <CardActionArea
