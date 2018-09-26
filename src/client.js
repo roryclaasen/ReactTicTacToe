@@ -39,6 +39,7 @@ export default class SocketClient {
 				this.setSocketId(data.socketId);
 			} else {
 				izitoast.error({ message: 'Unable to create game, please try again' });
+				(console.error || console.log).call(console, 'Unable to create game, please try again');
 				// console.log(data.error.stack);
 			}
 			cb(data);
@@ -61,8 +62,10 @@ export default class SocketClient {
 						title: 'Unable to join game',
 						message: data.error.message
 					});
+					console.log('WARN: Unable to join game, please try again');
 				} else {
-					izitoast.error({ message: 'Unable to create game, please try again' });
+					izitoast.error({ message: 'Unable to join game, please try again' });
+					(console.error || console.log).call(console, 'Unable to join game, please try again');
 					// console.log(data.error.stack);
 				}
 			}
@@ -72,6 +75,7 @@ export default class SocketClient {
 
 	leaveGame = () => {
 		this.socket.emit(commands.lobby.leave, this.token);
+		this.gameData = undefined;
 	}
 
 	click = (sector, cell, cb) => {
@@ -84,6 +88,7 @@ export default class SocketClient {
 				this.gameData = data;
 			} else {
 				izitoast.error({ message: 'Unable to place tile' });
+				(console.error || console.log).call(console, 'Unable to place tile');
 				// console.log(data.error.stack);
 			}
 			cb(data);

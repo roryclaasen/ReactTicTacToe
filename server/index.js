@@ -45,7 +45,6 @@ io.on('connection', function (socket) {
 
 	socket.on(commands.lobby.make, function (username, fn) {
 		try {
-			throw new Exception('Yeah an Error!');
 			manager.make(socket.token, (game) => {
 				game.addPlayer(username, socket.id);
 				socket.join(game.token);

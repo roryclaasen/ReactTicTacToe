@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import copy from 'copy-to-clipboard';
 
 export default class Connect extends Component {
 
@@ -40,12 +42,16 @@ export default class Connect extends Component {
 		this.setState({ allowTokenInput: false, allowNameInput: false });
 
 		this.props.make(this.state.username, (data) => {
-			this.setState({
-				token: data.token,
-				disableButtons: true,
-				tokenHelp: 'Share this token with your friend',
-				waiting: true
-			});
+			if (!data.error) {
+				this.setState({
+					token: data.token,
+					disableButtons: true,
+					tokenHelp: 'Share this token with your friend',
+					waiting: true
+				});
+			} else {
+				this.setState({ allowTokenInput: true, allowNameInput: true });
+			}
 		});
 	}
 
@@ -74,37 +80,52 @@ export default class Connect extends Component {
 	}
 
 	render() {
-		var inputStyles = {
+		var width100 = {
 			width: '100%'
 		}
 		var cardStyles = {
 			textAlign: 'center'
 		}
+		var headingStyle = {
+			fontWeight: 'normal'
+		}
 		var cardContent;
 		if (this.state.waiting) {
-			cardContent = <CardContent style={cardStyles}>
-				<Typography variant="display1" component="h1" color="inherit">
-					Play Online
-				</Typography>
-				<Grid container justify="center">
-					<Grid item>
-						<Typography variant="display1">
-							{this.state.token}
-						</Typography>
-						<Typography variant="subheading">
-							Waiting for opponent to join
-						</Typography>
+			cardContent = <CardActionArea
+				onClick={() => copy(this.state.token)}
+				style={width100}
+			>
+				<CardContent style={cardStyles}>
+					<Typography gutterBottom variant="display1" component="h1" color="inherit">
+						{this.state.username}
+					</Typography>
+					<Grid container justify="center">
+						<Grid item>
+							<Typography gutterBottom variant="subheading">
+								Waiting for opponent to join
+							</Typography>
+							<Typography gutterBottom variant="subheading">
+								Share the game token bellow with you opponent so they can join
+							</Typography>
+							<Typography gutterBottom variant="display1">
+								{this.state.token}
+							</Typography>
+						</Grid>
 					</Grid>
-				</Grid>
-				<LinearProgress variant="query" color="secondary" />
-			</CardContent>;
+					<LinearProgress variant="query" color="secondary" />
+				</CardContent>
+			</CardActionArea>;
 		} else {
 			cardContent = <CardContent>
-				<Typography variant="display1" component="h1" color="inherit">
+				<Typography gutterBottom variant="display1" component="h1" color="inherit">
 					Play Online
 				</Typography>
-				<Typography component="p">
-					{/* TODO: Write a help section or instructions of how to use */}
+				<Typography gutterBottom component="p">
+					To play against another player online you must share the same game token with your opponent.
+				</Typography>
+				<Typography gutterBottom component="ol">
+					<li>Enter a name to be identifed by</li>
+					<li>Either click 'Create a Game' or enter the game token to start playing</li>
 				</Typography>
 				<Grid container spacing={24}>
 					<Grid item md={6}>
@@ -112,13 +133,13 @@ export default class Connect extends Component {
 							Enter a friendy username to be identified by
 						</Typography>
 						<TextField
-							required
 							id="username"
 							label="User Name"
 							margin="normal"
+							variant="outlined"
 							value={this.state.username}
 							onChange={this.usernameChange}
-							style={inputStyles}
+							style={width100}
 							error={!this.validUsername() && this.state.username.length > 0}
 							disabled={!this.state.allowNameInput}
 						/>
@@ -128,13 +149,13 @@ export default class Connect extends Component {
 							Enter the game token
 						</Typography>
 						<TextField
-							required
 							id="token"
 							label="Game Token"
 							margin="normal"
+							variant="outlined"
 							value={this.state.token}
 							onChange={this.tokenChange}
-							style={inputStyles}
+							style={width100}
 							type="number"
 							helperText={this.state.tokenHelp}
 							error={!this.validToken() && this.state.token.length > 0}

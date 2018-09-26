@@ -32,6 +32,7 @@ export default class App extends Component {
 
 		this.board = React.createRef();
 		this.state = {
+			updateKey: 0,
 			boardKey: 1,
 			playing: false,
 			online: false,
@@ -91,22 +92,16 @@ export default class App extends Component {
 		});
 	}
 
-	offlineJoin = () => {
-		this.setState({ online: false, playing: true });
-	}
+	offlineJoin = () => this.setState({ online: false, playing: true });
+	
+	onlineSetup = () => this.setState({ online: true, playing: false });
 
-	onlineSetup = () => {
-		this.setState({ online: true, playing: false });
-	}
+	onlineMake = (username, cb) => this.socket.createGame(username, (data) => {
+		cb(data);
+		this.forceUpdate();
+	});
 
-	onlineMake = (username, cb) => {
-		this.socket.createGame(username, cb);
-		// Trigger render to show token
-	}
-
-	onlineJoin = (username, token, cb) => {
-		this.socket.joinGame(username, token, cb);
-	}
+	onlineJoin = (username, token, cb) => this.socket.joinGame(username, token, cb);
 
 	onlineGameUpdate = (game) => {
 		if (game.players.length === 2) {
@@ -149,8 +144,6 @@ export default class App extends Component {
 		}
 	}
 
-	onlineCopyToken = () => copy(this.socket.token);
-
 	render() {
 		var currentApp;
 		var buttonGroup = [];
@@ -180,7 +173,7 @@ export default class App extends Component {
 				/>
 				buttonGroup.push(
 					<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
-						<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={this.onlineCopyToken}>
+						<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={() => copy(this.socket.token)}>
 							Token: {this.socket.token}
 						</Button>
 					</Tooltip>
@@ -202,7 +195,7 @@ export default class App extends Component {
 				if (this.socket.gameData !== undefined) {
 					buttonGroup.push(
 						<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
-							<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={this.onlineCopyToken}>
+							<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={() => copy(this.socket.token)}>
 								Token: {this.socket.gameData.token}
 							</Button>
 						</Tooltip>
