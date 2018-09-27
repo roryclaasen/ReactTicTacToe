@@ -1,4 +1,6 @@
 import Board from './Board';
+import React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 export default class OnlinceBoard extends Board {
 
@@ -27,8 +29,22 @@ export default class OnlinceBoard extends Board {
 		var name = this.state.players[this.state.current].username;
 		var message = 'Its ' + (isMe ? 'your' : name + '\'s') + ' turn';
 
-		if (this.state.win !== -1) message = (isMe ? 'You have'  : name + ' has') + ' won the game!';
-		return message;
+		var youAre = 'You are ';
+		if (playerId === 0) youAre += 'red';
+		else if (playerId === 1) youAre += 'blue';
+		else youAre += 'spectating';
+
+		if (this.state.win !== -1) message = (isMe ? 'You have' : name + ' has') + ' won the game!';
+		return (
+			<div className="game-message">
+				<Typography variant="subheading" className="youAre">
+					{youAre}
+				</Typography>
+				<Typography variant="display1" component="h1" color="inherit">
+					{message}
+				</Typography>
+			</div>
+		);
 	}
 
 	clickHandler(e) {

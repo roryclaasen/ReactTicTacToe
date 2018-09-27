@@ -53,8 +53,7 @@ export default class SocketClient {
 			token: token
 		}, (data) => {
 			if (!data.error) {
-				this.gameData = data;
-				this.token = data.token;
+				this.updateGame(data);
 				this.setSocketId(data.socketId);
 			} else {
 				if (data.error.type === 'msg') {

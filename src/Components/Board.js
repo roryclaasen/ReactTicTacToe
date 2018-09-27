@@ -24,7 +24,7 @@ export default class Board extends Component {
 				win: -1
 			}
 		}
-		this.state =  {
+		this.state = {
 			sectors: sectorList,
 			sectorFinal: new Array(NO_CELLS).fill(-1),
 			win: -1,
@@ -91,14 +91,18 @@ export default class Board extends Component {
 		if (this.state.win !== -1) {
 			message = name + ' has won the game!';
 		}
-		return message;
+		return (
+			<Typography variant="display1" component="h1" color="inherit" className="game-message">
+				{message}
+			</Typography>
+		);
 	}
 
 	render() {
 		var sectors = [];
 		for (var i = 0; i < NO_SECTORS; i++) {
 			var key = 's' + i;
-			
+
 			sectors.push(<BoardSector
 				cells={this.state.sectors[i].cells}
 				sector={i}
@@ -115,7 +119,7 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		
+
 		var tableClass = 'game-table player' + (this.state.current + 1);
 		if (this.state.win !== -1) {
 			tableClass = 'game-table finished';
@@ -124,9 +128,7 @@ export default class Board extends Component {
 		return (
 			<Card className="game-container">
 				<CardContent>
-					<Typography variant="display1" component="h1" color="inherit" className="game-message">
-						{message}
-					</Typography>
+					{message}
 					<Grid
 						container
 						direction="row"
@@ -208,7 +210,7 @@ class BoardCell extends Component {
 	render() {
 		var value = this.props.value;
 		var validCell = this.props.valid;
-		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable': '') : (value === 0 ? 'player1' : 'player2'));
+		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable' : '') : (value === 0 ? 'player1' : 'player2'));
 		return (
 			<div className={cssClass} data-location={this.props.location} onClick={this.props.onClick}></div>
 		);

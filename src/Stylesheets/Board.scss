@@ -12,7 +12,7 @@ $player2: blue;
 
 	.game-message {
 		text-align: center;
-		margin-bottom: .5em;
+		&, .youAre { margin-bottom: .5em; }
 	}
 
 	.game-table {

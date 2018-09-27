@@ -74,20 +74,20 @@ io.on('connection', function (socket) {
 			var ftoken = data.token;
 			if (manager.hasGame(ftoken)) {
 				token = ftoken;
-				manager.joinGame(token, username, socket.id, (game) => {
+				manager.joinGame(token, username, socket.id, (game, isPlayer) => {
 					socket.join(token);
 
-					if (game.players.length == 2) {
-						var gameReturn = game.forClient();
-						gameReturn.socketId = socket.id;
+					var gameReturn = game.forClient();
+					gameReturn.socketId = socket.id;
 
-						fn(gameReturn);
-						
+					fn(gameReturn);
+
+					if (isPlayer) {
 						io.in(token).emit(commands.game.started, game);
 						console.log('%s has joined game %s as a player', socket.id, token);
 					} else {
 						console.log('%s has joined game %s as a spectator', socket.id, token);
-						// TODO Spectator
+						// socket.emit(commands.game.started, game);
 					}
 				});
 			} else {

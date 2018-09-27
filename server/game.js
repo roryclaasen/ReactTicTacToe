@@ -41,8 +41,8 @@ class GameManager {
 	}
 
 	joinGame(token, username, uid, cb) {
-		this.games[token].addPlayer(username, uid);
-		if (cb) cb(this.games[token]);
+		var isPlayer = this.games[token].addPlayer(username, uid);
+		if (cb) cb(this.games[token], isPlayer);
 	}
 
 	removeGame(token) {
@@ -79,8 +79,12 @@ class Game {
 			username: username,
 			id: uid
 		}
-		if (this.players.length >= 2) this.spectators.push(player);
-		else this.players.push(player);
+		if (this.players.length >= 2) {
+			this.spectators.push(player);
+			return false;
+		}
+		this.players.push(player);
+		return true;
 	}
 
 	hasPlayer(uid) {
@@ -138,7 +142,7 @@ class Game {
 		}
 
 		if (full || gameWinner !== null) this.currentSector = -1;
-		
+
 		this.sectors[sectorId] = sector;
 	}
 
