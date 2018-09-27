@@ -91,7 +91,6 @@ io.on('connection', function (socket) {
 					}
 				});
 			} else {
-				// TODO error
 				fn({ error: {
 					type: 'msg',
 					message: 'No game exists with token ' + ftoken,
