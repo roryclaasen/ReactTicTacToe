@@ -2,10 +2,13 @@
 
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500';
 
+body {
+	font-family: 'Roboto', sans-serif;
+}
 
 .AppContainer {
 	min-height: 100vh;
-	.AppItem { margin: 1em 2em; }
+	// .AppItem { margin: 1em 2em; }
 }
 
 .floatingButtons {

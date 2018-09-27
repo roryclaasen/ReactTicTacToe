@@ -3,18 +3,25 @@ $player1: red;
 $player2: blue;
 
 .game-container {
-	margin: 1.5em;
+	margin: auto;
 	// padding: 1em;
+	width: max-content;
+	width: -moz-max-content;
+	width: -webkit-max-content;
+	padding: 1em;
 
 	.game-message {
 		text-align: center;
-		margin-bottom: .5em;
+		&, .youAre { margin-bottom: .5em; }
 	}
 
 	.game-table {
 		user-select: none;
 		border: 2px solid black;
 		// min-width: calc(((#{$cell-size} + 2px) * 9) + 4px);
+		min-width: max-content;
+		min-width: -moz-max-content;
+		min-width: -webkit-max-content;
 	
 		&.final {
 			border: 0;

@@ -24,12 +24,13 @@ export default class Board extends Component {
 				win: -1
 			}
 		}
-		this.state =  {
+		this.state = {
 			sectors: sectorList,
 			sectorFinal: new Array(NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
-			currentSector: -1
+			currentSector: -1,
+			players: undefined
 		};
 
 		this.baseState = this.state;
@@ -84,10 +85,24 @@ export default class Board extends Component {
 		});
 	}
 
+	gameMessage() {
+		var name = this.state.current === 0 ? 'red' : 'blue';
+		var message = 'Its ' + name + '\'s turn';
+		if (this.state.win !== -1) {
+			message = name + ' has won the game!';
+		}
+		return (
+			<Typography variant="display1" component="h1" color="inherit" className="game-message">
+				{message}
+			</Typography>
+		);
+	}
+
 	render() {
 		var sectors = [];
 		for (var i = 0; i < NO_SECTORS; i++) {
 			var key = 's' + i;
+
 			sectors.push(<BoardSector
 				cells={this.state.sectors[i].cells}
 				sector={i}
@@ -104,19 +119,16 @@ export default class Board extends Component {
 				{sectors[r + 2]}
 			</div>)
 		}
-		var color = this.state.current === 0 ? 'red' : 'blue';
-		var message = 'Its ' + color + '\'s turn';
+
 		var tableClass = 'game-table player' + (this.state.current + 1);
 		if (this.state.win !== -1) {
-			message = color + ' has won the game!';
-			tableClass = 'game-table finished'
+			tableClass = 'game-table finished';
 		}
+		var message = this.gameMessage();
 		return (
 			<Card className="game-container">
 				<CardContent>
-					<Typography variant="display1" component="h1" color="inherit" className="game-message">
-						{message}
-					</Typography>
+					{message}
 					<Grid
 						container
 						direction="row"
@@ -198,7 +210,7 @@ class BoardCell extends Component {
 	render() {
 		var value = this.props.value;
 		var validCell = this.props.valid;
-		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable': '') : (value === 0 ? 'player1' : 'player2'));
+		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable' : '') : (value === 0 ? 'player1' : 'player2'));
 		return (
 			<div className={cssClass} data-location={this.props.location} onClick={this.props.onClick}></div>
 		);
