@@ -46,4 +46,4 @@ The objective of this game is to be the first to win three tic-tac-toe games lyi
 This project is licensed under the MIT License - see the [license file](LICENSE.md) file for details
 
 [CI-master]: https://travis-ci.org/roryclaasen/ReactTicTacToe.svg?branch=master "Travis CI"
-[CI-dev]: https://travis-ci.org/roryclaasen/ReactTicTacToe.svg?branch=master "Travis CI"
+[CI-dev]: https://travis-ci.org/roryclaasen/ReactTicTacToe.svg?branch=dev "Travis CI"
