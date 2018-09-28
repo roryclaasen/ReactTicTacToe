@@ -1,31 +1,31 @@
-'use strict';
+/* eslint no-console: 0 */
 
 const express = require('express');
 const path = require('path');
 const http = require('http');
-const socket = require('socket.io');
+const socketio = require('socket.io');
 
-const manager = require('./game');
+const manager = require('./manager');
 const commands = require('../src/socket.commands');
 
 const port = process.env.PORT || 3000;
 
-var app = express();
-var server = http.Server(app);
-var io = socket(server);
+const app = express();
+const server = http.Server(app);
+const io = socketio(server);
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
 	res.sendFile('index.html');
 });
 
-io.on('connection', function (socket) {
-	var token;
+io.on('connection', (socket) => {
+	let token;
 
 	console.log('User Connected (%s)', socket.id);
 
-	socket.on('disconnect', function () {
+	socket.on('disconnect', () => {
 		try {
 			console.log('User Disconnected');
 			if (token !== undefined) {
@@ -43,14 +43,15 @@ io.on('connection', function (socket) {
 		}
 	});
 
-	socket.on(commands.lobby.make, function (username, fn) {
+	socket.on(commands.lobby.make, (username, fn) => {
 		try {
 			manager.make(socket.token, (game) => {
 				game.addPlayer(username, socket.id);
 				socket.join(game.token);
 
-				token = game.token;
-				var gameReturn = game.forClient();
+				token = game.token; // eslint-disable-line prefer-destructuring
+
+				const gameReturn = game.forClient();
 				gameReturn.socketId = socket.id;
 
 				fn(gameReturn);
@@ -61,23 +62,25 @@ io.on('connection', function (socket) {
 			console.log('Error in \'%s\'', commands.lobby.make);
 			(console.error || console.log).call(console, e.stack || e);
 
-			fn({ error: {
-				type: 'stack',
-				stack: e
-			}});
+			fn({
+				error: {
+					type: 'stack',
+					stack: e
+				}
+			});
 		}
 	});
 
-	socket.on(commands.lobby.join, function (data, fn) {
+	socket.on(commands.lobby.join, (data, fn) => {
 		try {
-			var username = data.username;
-			var ftoken = data.token;
+			const { username } = data;
+			const ftoken = data.token;
 			if (manager.hasGame(ftoken)) {
 				token = ftoken;
 				manager.joinGame(token, username, socket.id, (game, isPlayer) => {
 					socket.join(token);
 
-					var gameReturn = game.forClient();
+					const gameReturn = game.forClient();
 					gameReturn.socketId = socket.id;
 
 					fn(gameReturn);
@@ -91,24 +94,28 @@ io.on('connection', function (socket) {
 					}
 				});
 			} else {
-				fn({ error: {
-					type: 'msg',
-					message: 'No game exists with token ' + ftoken,
-					token: ftoken
-				}});
+				fn({
+					error: {
+						type: 'msg',
+						message: `No game exists with token ${ftoken}`,
+						token: ftoken
+					}
+				});
 			}
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.lobby.join);
 			(console.error || console.log).call(console, e.stack || e);
 
-			fn({ error: {
-				type: 'stack',
-				stack: e
-			}});
+			fn({
+				error: {
+					type: 'stack',
+					stack: e
+				}
+			});
 		}
 	});
 
-	socket.on(commands.lobby.leave, function (dToken) {
+	socket.on(commands.lobby.leave, (dToken) => {
 		try {
 			if (token !== dToken) return;
 
@@ -130,7 +137,7 @@ io.on('connection', function (socket) {
 		}
 	});
 
-	socket.on(commands.game.click, function (data) {
+	socket.on(commands.game.click, (data, fn) => {
 		try {
 			if (token !== data.token) return;
 
@@ -140,15 +147,17 @@ io.on('connection', function (socket) {
 			console.log('Error in \'%s\'', commands.game.click);
 			(console.error || console.log).call(console, e.stack || e);
 
-			fn({ error: {
-				type: 'stack',
-				stack: e
-			}});
+			fn({
+				error: {
+					type: 'stack',
+					stack: e
+				}
+			});
 		}
 	});
 });
 
-server.listen(port, function () {
+server.listen(port, () => {
 	console.log('Serve listening on *:%d', port);
 });
 

@@ -1,36 +1,34 @@
 import React, { Component } from 'react';
 // import update from 'immutability-helper';
-import '../Stylesheets/Board.css'
 
+import '../Stylesheets/Board.css';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-const NO_SECTORS = 9;
-const NO_CELLS = 9;
-const NO_IN_ROW = 3;
+import { NO_SECTORS, NO_CELLS, NO_IN_ROW, CalculateWinner } from '../globals';
+
+import BoardSector from './BoardSector';
 
 export default class Board extends Component {
-
 	constructor(props) {
 		super(props);
 
-		var sectorList = [];
-		for (var i = 0; i < NO_SECTORS; i++) {
+		const sectorList = [];
+		for (let i = 0; i < NO_SECTORS; i += 1) {
 			sectorList[i] = {
 				cells: new Array(NO_CELLS).fill(-1),
 				win: -1
-			}
+			};
 		}
 		this.state = {
 			sectors: sectorList,
 			sectorFinal: new Array(NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
-			currentSector: -1,
-			players: undefined
+			currentSector: -1
 		};
 
 		this.baseState = this.state;
@@ -38,58 +36,57 @@ export default class Board extends Component {
 		this.clickHandler = this.clickHandler.bind(this);
 	}
 
+
 	clickHandler(e) {
-		if (this.state.win !== -1) return;
+		const { win, sectors, sectorFinal, current } = this.state;
+		let { currentSector } = this.state;
+		if (win !== -1) return;
 
-		var location = e.target.dataset.location.split(',');
-		var sectorId = Number(location[0]);
-		var cellId = Number(location[1]);
-		var currentSector = this.state.currentSector;
-
-		var sectors = this.state.sectors;
-		var sectorFinal = this.state.sectorFinal;
+		const location = e.target.dataset.location.split(',');
+		const sectorId = Number(location[0]);
+		const cellId = Number(location[1]);
 
 		if (currentSector !== -1 && currentSector !== sectorId) return;
 		if (sectors[sectorId].cells[cellId] !== -1) return;
-		sectors[sectorId].cells[cellId] = this.state.current;
+		sectors[sectorId].cells[cellId] = current;
 
-		var sectorWinner = this.calculateWinner(sectors[sectorId].cells);
+		const sectorWinner = CalculateWinner(sectors[sectorId].cells);
 		if (sectorWinner !== null) {
 			sectors[sectorId].win = sectorWinner;
 			sectorFinal[sectorId] = sectorWinner;
 		}
 
-		var gameWinner = this.calculateWinner(sectorFinal);
+		let gameWinner = CalculateWinner(sectorFinal);
 		if (gameWinner !== null) {
-			console.log(gameWinner, 'has won the game!');
-			// TODO Player has won the game
+			// console.log(gameWinner, 'has won the game!');
 		} else gameWinner = -1;
 
 		currentSector = cellId;
 
-		var full = true;
-		for (var i = 0; i < NO_CELLS; i++) {
+		let full = true;
+		for (let i = 0; i < NO_CELLS; i += 1) {
 			if (sectors[currentSector].cells[i] === -1) {
 				full = false;
 				break;
 			}
 		}
-		if (full || gameWinner !== -1) currentSector = - 1;
+		if (full || gameWinner !== -1) currentSector = -1;
 
 		this.setState({
-			sectors: sectors,
-			sectorFinal: sectorFinal,
-			current: this.state.current === 0 ? 1 : 0,
-			currentSector: currentSector,
+			sectors,
+			sectorFinal,
+			current: current === 0 ? 1 : 0,
+			currentSector,
 			win: gameWinner
 		});
 	}
 
 	gameMessage() {
-		var name = this.state.current === 0 ? 'red' : 'blue';
-		var message = 'Its ' + name + '\'s turn';
-		if (this.state.win !== -1) {
-			message = name + ' has won the game!';
+		const { current, win } = this.state;
+		const name = current === 0 ? 'red' : 'blue';
+		let message = `'Its ${name}'s turn`;
+		if (win !== -1) {
+			message = `${name} has won the game!`;
 		}
 		return (
 			<Typography variant="display1" component="h1" color="inherit" className="game-message">
@@ -99,32 +96,35 @@ export default class Board extends Component {
 	}
 
 	render() {
-		var sectors = [];
-		for (var i = 0; i < NO_SECTORS; i++) {
-			var key = 's' + i;
+		const { sectors, currentSector, win, current, sectorFinal } = this.state;
+		const sectorsList = [];
+		for (let i = 0; i < NO_SECTORS; i += 1) {
+			const key = `s${i}`;
 
-			sectors.push(<BoardSector
-				cells={this.state.sectors[i].cells}
-				sector={i}
-				key={key}
-				click={this.clickHandler}
-				currentSector={this.state.currentSector}
-			/>);
+			sectorsList.push(
+				<BoardSector
+					cells={sectors[i].cells}
+					sector={i}
+					key={key}
+					click={this.clickHandler}
+					currentSector={currentSector}
+				/>
+			);
 		}
-		var rows = [];
-		for (var r = 0; r < NO_SECTORS; r += NO_IN_ROW) {
-			rows.push(<div className="game-table-row" key={r}>
-				{sectors[r + 0]}
-				{sectors[r + 1]}
-				{sectors[r + 2]}
-			</div>)
+		const rowsList = [];
+		for (let r = 0; r < NO_SECTORS; r += NO_IN_ROW) {
+			rowsList.push(
+				<div className="game-table-row" key={r}>
+					{sectorsList[r + 0]}
+					{sectorsList[r + 1]}
+					{sectorsList[r + 2]}
+				</div>
+			);
 		}
 
-		var tableClass = 'game-table player' + (this.state.current + 1);
-		if (this.state.win !== -1) {
-			tableClass = 'game-table finished';
-		}
-		var message = this.gameMessage();
+		let tableClass = `game-table player${current + 1}`;
+		if (win !== -1) tableClass = 'game-table finished';
+		const message = this.gameMessage();
 		return (
 			<Card className="game-container">
 				<CardContent>
@@ -136,83 +136,17 @@ export default class Board extends Component {
 						alignItems="center"
 					>
 						<Grid item className={tableClass}>
-							{rows}
+							{rowsList}
 						</Grid>
 						<Grid item className="game-table final">
 							<BoardSector
-								cells={this.state.sectorFinal}
-								class="final"
+								cells={sectorFinal}
+								className="final"
 							/>
 						</Grid>
 					</Grid>
 				</CardContent>
 			</Card>
-		);
-	}
-
-	calculateWinner(cells) {
-		const lines = [
-			[0, 1, 2],
-			[3, 4, 5],
-			[6, 7, 8],
-			[0, 3, 6],
-			[1, 4, 7],
-			[2, 5, 8],
-			[0, 4, 8],
-			[2, 4, 6],
-		];
-		for (let i = 0; i < lines.length; i++) {
-			const [a, b, c] = lines[i];
-			if (cells[a] !== -1 && cells[a] === cells[b] && cells[a] === cells[c]) {
-				return cells[a];
-			}
-		}
-		return null;
-	}
-}
-
-class BoardSector extends Component {
-
-	render() {
-		var validSector = this.props.currentSector === -1 || this.props.currentSector === this.props.sector;
-		var cells = [];
-		for (var i = 0; i < NO_CELLS; i++) {
-			var key = this.props.sector + ',' + i;
-			var value = this.props.cells[i];
-			cells.push(<BoardCell
-				value={value}
-				valid={validSector && !(this.props.class === "final")}
-				location={key}
-				key={key}
-				onClick={this.props.click}
-			/>);
-		}
-		var rows = [];
-		for (var r = 0; r < NO_CELLS; r += NO_IN_ROW) {
-			rows.push(<div className="game-sector-row" key={r}>
-				{cells[r + 0]}
-				{cells[r + 1]}
-				{cells[r + 2]}
-			</div>)
-		}
-		var cssClass = 'game-sector';
-		if (this.props.class === "final") cssClass += ' final';
-		if (!validSector) cssClass += ' disabled';
-		return (
-			<div className={cssClass}>
-				{rows}
-			</div>
-		);
-	}
-}
-
-class BoardCell extends Component {
-	render() {
-		var value = this.props.value;
-		var validCell = this.props.valid;
-		var cssClass = 'game-cell ' + (value === -1 ? (validCell ? 'selectable' : '') : (value === 0 ? 'player1' : 'player2'));
-		return (
-			<div className={cssClass} data-location={this.props.location} onClick={this.props.onClick}></div>
 		);
 	}
 }
