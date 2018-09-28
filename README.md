@@ -34,6 +34,16 @@ The objective of this game is to be the first to win three tic-tac-toe games lyi
 4. The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.
 5. If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.
 
+## Branches
+
+| Branch | Travis CI | Server |
+|:-------|:----------|:-------|
+| [Production](https://github.com/roryclaasen/ReactTicTacToe/tree/dev) | [![Build Status][CI-master]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | [Heroku](https://roryclaasen.github.io/ReactTicTacToe) |
+| [Development](https://github.com/roryclaasen/ReactTicTacToe/tree/dev)    | [![Build Status][CI-dev]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | [Heroku](https://roryclaasen.github.io/ReactTicTacToe-dev) |
+
 ## License
 
 This project is licensed under the MIT License - see the [license file](LICENSE.md) file for details
+
+[CI-master]: https://travis-ci.org/roryclaasen/ReactTicTacToe.svg?branch=master "Travis CI"
+[CI-dev]: https://travis-ci.org/roryclaasen/ReactTicTacToe.svg?branch=dev "Travis CI"

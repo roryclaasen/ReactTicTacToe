@@ -34,7 +34,10 @@ $player2: blue;
 			&.final, &.disabled {
 				&, .game-cell { cursor: default; }
 			}
-			&.disabled { background-color: rgba(0, 0, 0, 0.1); }
+			&.disabled {
+				background-color: rgba(0, 0, 0, 0.3);
+				.game-cell { opacity: 0.8; }
+			}
 			&.final { border-width: 4px; }
 	
 			.game-cell {

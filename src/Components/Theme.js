@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
@@ -14,11 +15,21 @@ export default class ThemeManager extends Component {
 			},
 		});
 	}
+
 	render() {
+		const { children } = this.props;
 		return (
 			<MuiThemeProvider theme={this.state}>
-				{this.props.children}
+				{children}
 			</MuiThemeProvider>
 		);
 	}
 }
+
+ThemeManager.propTypes = {
+	children: PropTypes.element
+};
+
+ThemeManager.defaultProps = {
+	children: undefined
+};

@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
+import copy from 'copy-to-clipboard';
+
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
+// import CodeIcon from '@material-ui/icons/Code';
+import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import ThemeManager from './Theme';
 import Welcome from './Welcome';
 import Connect from './Connect';
 import Board from './Board';
 import OnlineBoard from './OnlineBoard';
-
-import SocketClient from './../client';
-
-import copy from 'copy-to-clipboard';
-
-import Tooltip from '@material-ui/core/Tooltip';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
-// import CodeIcon from '@material-ui/icons/Code';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import SocketClient from '../client';
 
 import '../Stylesheets/App.css';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -32,7 +29,6 @@ export default class App extends Component {
 
 		this.board = React.createRef();
 		this.state = {
-			updateKey: 0,
 			boardKey: 1,
 			playing: false,
 			online: false,
@@ -49,20 +45,22 @@ export default class App extends Component {
 	}
 
 	handleDialogClose = (agreed) => {
-		if (agreed === true) this.state.dialog.action();
+		const { dialog } = this.state;
+		if (agreed === true) dialog.action();
 		this.setState({
 			dialog: {
 				open: false,
-				title: this.state.dialog.title,
-				message: this.state.dialog.message,
-				agree: this.state.dialog.agree,
-				disagree: this.state.dialog.disagree,
+				title: dialog.title,
+				message: dialog.message,
+				agree: dialog.agree,
+				disagree: dialog.disagree,
 				action: undefined
 			}
 		});
 	}
 
 	offlineNewGame = () => {
+		const { boardKey } = this.state;
 		this.setState({
 			dialog: {
 				open: true,
@@ -71,13 +69,14 @@ export default class App extends Component {
 				agree: 'Yes',
 				disagree: 'No, continue playing',
 				action: () => {
-					this.setState({ boardKey: this.state.boardKey + 1 });
+					this.setState({ boardKey: boardKey + 1 });
 				}
 			}
 		});
 	}
 
 	offlineLeave = () => {
+		const { boardKey } = this.state;
 		this.setState({
 			dialog: {
 				open: true,
@@ -86,14 +85,14 @@ export default class App extends Component {
 				agree: 'Yes',
 				disagree: 'No, continue playing',
 				action: () => {
-					this.setState({ boardKey: this.state.boardKey + 1, playing: false });
+					this.setState({ boardKey: boardKey + 1, playing: false });
 				}
 			}
 		});
 	}
 
 	offlineJoin = () => this.setState({ online: false, playing: true });
-	
+
 	onlineSetup = () => this.setState({ online: true, playing: false });
 
 	onlineMake = (username, cb) => this.socket.createGame(username, (data) => {
@@ -125,7 +124,8 @@ export default class App extends Component {
 	}
 
 	onlineLeave = () => {
-		if (this.state.playing) {
+		const { playing } = this.state;
+		if (playing) {
 			this.setState({
 				dialog: {
 					open: true,
@@ -145,32 +145,38 @@ export default class App extends Component {
 	}
 
 	render() {
-		var currentApp;
-		var buttonGroup = [];
-		if (this.state.playing) {
-			if (this.state.online === false) {
-				currentApp = <Board
-					ref={this.board}
-					key={this.state.boardKey}
-				/>;
+		const { boardKey, playing, online, dialog } = this.state;
+		let currentApp;
+		const buttonGroup = [];
+		if (playing) {
+			// Is in game
+			if (online === false) {
+				// Pass and Play
+				currentApp = (
+					<Board
+						ref={this.board}
+						key={boardKey}
+					/>
+				);
 				buttonGroup.push(
 					<Button variant="extendedFab" color="primary" className="btn" aria-label="New Game" onClick={this.offlineNewGame} key="gamenew">
 						<AddIcon />
 						New Game
-		  			</Button>
-				);
+					</Button>);
 				buttonGroup.push(
 					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.offlineLeave} key="gameexit">
 						<CloseIcon />
 						Exit
-		  			</Button>
-				);
+					</Button>);
 			} else {
-				currentApp = <OnlineBoard
-					ref={this.board}
-					click={this.socket.click}
-					id={this.socket.socketId}
-				/>
+				// Multiplayer
+				currentApp = (
+					<OnlineBoard
+						ref={this.board}
+						click={this.socket.click}
+						id={this.socket.socketId}
+					/>
+				);
 				buttonGroup.push(
 					<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
 						<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={() => copy(this.socket.token)}>
@@ -182,36 +188,40 @@ export default class App extends Component {
 					<Button variant="extendedFab" color="secondary" className="btn" aria-label="Exit" onClick={this.onlineLeave} key="gameexit">
 						<CloseIcon />
 						Leave
-		  			</Button>
+					</Button>
 				);
 			}
-		} else {
-			if (this.state.online) {
-				currentApp = <Connect
+		} else if (online) {
+			// Not playing but wants to play online
+			currentApp = (
+				<Connect
 					cancel={this.onlineLeave}
 					make={this.onlineMake}
 					join={this.onlineJoin}
-				/>;
-				if (this.socket.gameData !== undefined) {
-					buttonGroup.push(
-						<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
-							<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={() => copy(this.socket.token)}>
-								Token: {this.socket.gameData.token}
-							</Button>
-						</Tooltip>
-					);
-				}
-			} else {
-				currentApp = <Welcome
+				/>
+			);
+			if (this.socket.gameData !== undefined) {
+				buttonGroup.push(
+					<Tooltip title="Copy to clipboard" placement="top" key="gametoken">
+						<Button variant="extendedFab" color="primary" className="btn" aria-label="Token" onClick={() => copy(this.socket.token)}>
+							Token: {this.socket.gameData.token}
+						</Button>
+					</Tooltip>
+				);
+			}
+		} else {
+			// Not playing but needs to decide what to do
+			currentApp = (
+				<Welcome
 					playOffline={this.offlineJoin}
 					playOnline={this.onlineSetup}
-				/>;
-				// buttonGroup.push(
-				// 	<Button variant="fab" color="primary" className="btn" aria-label="Code" href="https://github.com/roryclaasen/ReactTicTacToe" key="source">
-				// 		<CodeIcon />
-				// 	</Button>
-				// );
-			}
+				/>
+			);
+			// buttonGroup.push(
+			// 	<Button variant="fab" color="primary" className="btn" aria-label="Code" href="https://github.com/roryclaasen/ReactTicTacToe" key="source">
+			// 		<CodeIcon />
+			// 	</Button>
+			// );
 		}
 		return (
 			<ThemeManager>
@@ -230,25 +240,25 @@ export default class App extends Component {
 					{buttonGroup}
 				</div>
 				<Dialog
-					open={this.state.dialog.open}
+					open={dialog.open}
 					onClose={this.handleDialogClose}
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
-					<DialogTitle id="alert-dialog-title">{this.state.dialog.title}</DialogTitle>
+					<DialogTitle id="alert-dialog-title">{dialog.title}</DialogTitle>
 					<DialogContent>
 						<DialogContentText id="alert-dialog-description">
-							{this.state.dialog.message}
+							{dialog.message}
 						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						{this.state.dialog.disagree !== undefined &&
+						{dialog.disagree !== undefined && (
 							<Button onClick={this.handleDialogClose} color="primary">
-								{this.state.dialog.disagree}
+								{dialog.disagree}
 							</Button>
-						}
-						<Button onClick={(e) => this.handleDialogClose(true)} color="primary" autoFocus>
-							{this.state.dialog.agree}
+						)}
+						<Button onClick={() => this.handleDialogClose(true)} color="primary" autoFocus>
+							{dialog.agree}
 						</Button>
 					</DialogActions>
 				</Dialog>
