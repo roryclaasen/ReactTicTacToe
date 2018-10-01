@@ -1,8 +1,8 @@
-export const NO_SECTORS = 9;
-export const NO_CELLS = 9;
-export const NO_IN_ROW = 3;
+const NO_SECTORS = 9;
+const NO_CELLS = 9;
+const NO_IN_ROW = 3;
 
-export function CalculateWinner(cells) {
+function CalculateWinner(cells) {
 	const lines = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -21,3 +21,10 @@ export function CalculateWinner(cells) {
 	}
 	return null;
 }
+
+module.exports = {
+	NO_SECTORS,
+	NO_CELLS,
+	NO_IN_ROW,
+	CalculateWinner
+};

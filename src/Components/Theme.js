@@ -27,7 +27,7 @@ export default class ThemeManager extends Component {
 }
 
 ThemeManager.propTypes = {
-	children: PropTypes.element
+	children: PropTypes.array
 };
 
 ThemeManager.defaultProps = {
