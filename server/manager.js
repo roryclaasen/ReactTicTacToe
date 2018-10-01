@@ -1,4 +1,4 @@
-import Game from './game';
+const Game = require('./game');
 
 class GameManager {
 	constructor() {

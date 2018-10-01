@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { NO_CELLS, NO_IN_ROW } from '../globals';
+import * as global from '../globals';
 
 import BoardCell from './BoardCell';
 
@@ -10,7 +10,7 @@ export default class BoardSector extends Component {
 		const { currentSector, sector, cells, className, click } = this.props;
 		const validSector = currentSector === -1 || currentSector === sector;
 		const cellsList = [];
-		for (let i = 0; i < NO_CELLS; i += 1) {
+		for (let i = 0; i < global.NO_CELLS; i += 1) {
 			const key = `${sector},${i}`;
 			const value = cells[i];
 			cellsList.push(
@@ -24,7 +24,7 @@ export default class BoardSector extends Component {
 			);
 		}
 		const rowsList = [];
-		for (let r = 0; r < NO_CELLS; r += NO_IN_ROW) {
+		for (let r = 0; r < global.NO_CELLS; r += global.NO_IN_ROW) {
 			rowsList.push(
 				<div className="game-sector-row" key={r}>
 					{cellsList[r + 0]}

@@ -1,20 +1,20 @@
-import { NO_SECTORS, NO_CELLS, CalculateWinner } from '../src/globals';
+const globals = require('../src/globals');
 
-export default class Game {
+class Game {
 	constructor(token) {
 		this.token = token;
 		this.players = [];
 		this.spectators = [];
 
 		const sectorList = [];
-		for (let i = 0; i < NO_SECTORS; i += 1) {
+		for (let i = 0; i < globals.NO_SECTORS; i += 1) {
 			sectorList[i] = {
-				cells: new Array(NO_CELLS).fill(-1),
+				cells: new Array(globals.NO_CELLS).fill(-1),
 				win: -1
 			};
 		}
 		this.sectors = sectorList;
-		this.sectorFinal = new Array(NO_CELLS).fill(-1);
+		this.sectorFinal = new Array(globals.NO_CELLS).fill(-1);
 		this.win = -1;
 		this.current = 0;
 		this.currentSector = -1;
@@ -64,7 +64,7 @@ export default class Game {
 		this.currentSector = cellId;
 
 		if (sector.win === -1) {
-			const sectorWinner = CalculateWinner(sector.cells);
+			const sectorWinner = globals.CalculateWinner(sector.cells);
 			if (sectorWinner !== null) {
 				sector.win = sectorWinner;
 				this.sectorFinal[sectorId] = sectorWinner;
@@ -73,7 +73,7 @@ export default class Game {
 
 		let gameWinner = -1;
 		if (this.win === -1) {
-			gameWinner = CalculateWinner(this.sectorFinal);
+			gameWinner = globals.CalculateWinner(this.sectorFinal);
 			if (gameWinner !== null) {
 				this.win = gameWinner;
 			}
@@ -105,3 +105,5 @@ export default class Game {
 		};
 	}
 }
+
+module.exports = Game;

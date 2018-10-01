@@ -8,24 +8,23 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-import { NO_SECTORS, NO_CELLS, NO_IN_ROW, CalculateWinner } from '../globals';
+import * as global from '../globals';
 
 import BoardSector from './BoardSector';
 
 export default class Board extends Component {
 	constructor(props) {
 		super(props);
-
 		const sectorList = [];
-		for (let i = 0; i < NO_SECTORS; i += 1) {
+		for (let i = 0; i < global.NO_SECTORS; i += 1) {
 			sectorList[i] = {
-				cells: new Array(NO_CELLS).fill(-1),
+				cells: new Array(global.NO_CELLS).fill(-1),
 				win: -1
 			};
 		}
 		this.state = {
 			sectors: sectorList,
-			sectorFinal: new Array(NO_CELLS).fill(-1),
+			sectorFinal: new Array(global.NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
 			currentSector: -1
@@ -50,13 +49,13 @@ export default class Board extends Component {
 		if (sectors[sectorId].cells[cellId] !== -1) return;
 		sectors[sectorId].cells[cellId] = current;
 
-		const sectorWinner = CalculateWinner(sectors[sectorId].cells);
+		const sectorWinner = global.CalculateWinner(sectors[sectorId].cells);
 		if (sectorWinner !== null) {
 			sectors[sectorId].win = sectorWinner;
 			sectorFinal[sectorId] = sectorWinner;
 		}
 
-		let gameWinner = CalculateWinner(sectorFinal);
+		let gameWinner = global.CalculateWinner(sectorFinal);
 		if (gameWinner !== null) {
 			// console.log(gameWinner, 'has won the game!');
 		} else gameWinner = -1;
@@ -64,7 +63,7 @@ export default class Board extends Component {
 		currentSector = cellId;
 
 		let full = true;
-		for (let i = 0; i < NO_CELLS; i += 1) {
+		for (let i = 0; i < global.NO_CELLS; i += 1) {
 			if (sectors[currentSector].cells[i] === -1) {
 				full = false;
 				break;
@@ -84,7 +83,7 @@ export default class Board extends Component {
 	gameMessage() {
 		const { current, win } = this.state;
 		const name = current === 0 ? 'red' : 'blue';
-		let message = `'Its ${name}'s turn`;
+		let message = `It's ${name}'s turn`;
 		if (win !== -1) {
 			message = `${name} has won the game!`;
 		}
@@ -98,7 +97,7 @@ export default class Board extends Component {
 	render() {
 		const { sectors, currentSector, win, current, sectorFinal } = this.state;
 		const sectorsList = [];
-		for (let i = 0; i < NO_SECTORS; i += 1) {
+		for (let i = 0; i < global.NO_SECTORS; i += 1) {
 			const key = `s${i}`;
 
 			sectorsList.push(
@@ -112,7 +111,7 @@ export default class Board extends Component {
 			);
 		}
 		const rowsList = [];
-		for (let r = 0; r < NO_SECTORS; r += NO_IN_ROW) {
+		for (let r = 0; r < global.NO_SECTORS; r += global.NO_IN_ROW) {
 			rowsList.push(
 				<div className="game-table-row" key={r}>
 					{sectorsList[r + 0]}
