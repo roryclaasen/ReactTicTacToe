@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import copy from 'copy-to-clipboard';
+import Push from 'push.js';
 
 export default class Connect extends Component {
 	constructor(props) {
@@ -26,6 +27,7 @@ export default class Connect extends Component {
 			tokenHelp: 'Token needs to be 6 characters long',
 			waiting: false
 		};
+		Push.Permission.request(() => { /* Granted */ }, () => { /* Denied */ });
 	}
 
 	gameJoin = () => {
