@@ -22,14 +22,14 @@ export default class OnlinceBoard extends Board {
 					promise = Push.create(`${isMe ? `${opponent} has` : 'You have'} won the game!`, {
 						icon: '/favicon.ico',
 						timeout: 2000,
-						link: undefined
+						link: '?'
 					});
 				} else {
 					promise = Push.create('It\'s your turn!', {
 						body: `${opponent} has made their move`,
 						icon: '/favicon.ico',
 						timeout: 2000,
-						link: undefined
+						link: '?'
 					});
 				}
 
