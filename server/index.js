@@ -15,6 +15,7 @@ const server = http.Server(app);
 const io = socketio(server);
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 
 app.get('/', (req, res) => {
 	res.sendFile('index.html');

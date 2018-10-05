@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Push from 'push.js';
 import Board from './Board';
 
 export default class OnlinceBoard extends Board {
@@ -10,6 +11,35 @@ export default class OnlinceBoard extends Board {
 	}
 
 	updateData(game) {
+		const old = this.state.current;
+		if (old !== game.current) {
+			const playerId = this.state.players.findIndex((p) => p.id === this.props.id);
+			const isMe = playerId === game.current;
+			const opponent = this.state.players[this.state.current].username;
+			if (isMe) {
+				let promise;
+				if (this.state.win !== -1) {
+					promise = Push.create(`${isMe ? `${opponent} has` : 'You have'} won the game!`, {
+						icon: '/favicon.ico',
+						timeout: 2000,
+						link: undefined
+					});
+				} else {
+					promise = Push.create('It\'s your turn!', {
+						body: `${opponent} has made their move`,
+						icon: '/favicon.ico',
+						timeout: 2000,
+						link: undefined
+					});
+				}
+
+				promise.then((notification) => {
+					window.focus();
+					document.focus();
+					notification.close();
+				});
+			}
+		}
 		this.setState({
 			sectors: game.sectors,
 			sectorFinal: game.sectorFinal,
@@ -33,7 +63,7 @@ export default class OnlinceBoard extends Board {
 		else if (playerId === 1) youAre += 'blue';
 		else youAre += 'spectating';
 
-		if (this.state.win !== -1) message = `${isMe ? 'You have' : `${name} has`} won the game!`;
+		if (this.state.win !== -1) message = `${isMe ? `${name} has` : 'You have'} won the game!`;
 		return (
 			<div className="game-message">
 				<Typography variant="subheading" className="youAre">
