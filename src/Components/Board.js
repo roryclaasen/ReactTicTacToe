@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
+import { Link } from 'react-router-dom';
+import { Button } from '@material-ui/core';
+
 import * as global from '../globals';
 
 import BoardSector from './BoardSector';
@@ -94,6 +97,29 @@ export default class Board extends Component {
 		);
 	}
 
+	toolBar() {
+		this.funcName = 'toolBar';
+
+		const LinkButton = {
+			textDecoration: 'none'
+		};
+
+		return (
+			<React.Fragment>
+				<Link to="/play" style={LinkButton}>
+					<Button>
+						New Game
+					</Button>
+				</Link>
+				<Link to="/" style={LinkButton}>
+					<Button>
+						Main Menu Game
+					</Button>
+				</Link>
+			</React.Fragment>
+		);
+	}
+
 	render() {
 		const { sectors, currentSector, win, current, sectorFinal } = this.state;
 		const sectorsList = [];
@@ -124,28 +150,36 @@ export default class Board extends Component {
 		let tableClass = `game-table player${current + 1}`;
 		if (win !== -1) tableClass = 'game-table finished';
 		const message = this.gameMessage();
+		const toolbar = this.toolBar();
 		return (
-			<Card className="game-container">
-				<CardContent>
-					{message}
-					<Grid
-						container
-						direction="row"
-						justify="center"
-						alignItems="center"
-					>
-						<Grid item className={tableClass}>
-							{rowsList}
+			<React.Fragment>
+				<Card className="game-container">
+					<CardContent>
+						{message}
+						<Grid
+							container
+							direction="row"
+							justify="center"
+							alignItems="center"
+						>
+							<Grid item className={tableClass}>
+								{rowsList}
+							</Grid>
+							<Grid item className="game-table final">
+								<BoardSector
+									cells={sectorFinal}
+									className="final"
+								/>
+							</Grid>
 						</Grid>
-						<Grid item className="game-table final">
-							<BoardSector
-								cells={sectorFinal}
-								className="final"
-							/>
-						</Grid>
-					</Grid>
-				</CardContent>
-			</Card>
+					</CardContent>
+				</Card>
+				<Card>
+					<CardContent>
+						{toolbar}
+					</CardContent>
+				</Card>
+			</React.Fragment>
 		);
 	}
 }

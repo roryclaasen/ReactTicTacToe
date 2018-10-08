@@ -4,12 +4,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import 'push.js/bin/serviceWorker.min';
 import registerServiceWorker from './registerServiceWorker';
 
-import App from './Components/App';
+import AppRouter from './Components/Routes/AppRouter';
 
 ReactDOM.render(
 	<React.Fragment>
 		<CssBaseline />
-		<App />
+		<AppRouter />
 	</React.Fragment>,
 	document.getElementById('root')
 );
