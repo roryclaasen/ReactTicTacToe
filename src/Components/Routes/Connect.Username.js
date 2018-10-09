@@ -8,7 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import TextField from '@material-ui/core/TextField';
 
 import { Link } from 'react-router-dom';
-import Handler from '../OnlineHandler';
+import Handler from '../../onlineHandler';
 
 export default class ConnectUsername extends Component {
 	constructor(props) {

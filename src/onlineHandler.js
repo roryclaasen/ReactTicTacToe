@@ -1,4 +1,4 @@
-import SocketClient from '../client';
+import SocketClient from './client';
 
 class OnlineHandler {
 	constructor() {

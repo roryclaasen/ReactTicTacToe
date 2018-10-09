@@ -17,7 +17,14 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, '..', 'build')));
 app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 
-app.get('*', (req, res) => {
+app.get([
+	'/',
+	'/play',
+	'/play/\\d{6}', // TODO Not sure if I need this or not
+	'/connect',
+	'/connect/username',
+	'/connect/token'
+], (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 

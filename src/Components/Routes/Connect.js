@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Handler from '../OnlineHandler';
+import Handler from '../../onlineHandler';
 
 export default class Connect extends Component {
 	render() {

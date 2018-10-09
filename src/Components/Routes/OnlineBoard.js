@@ -3,7 +3,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Push from 'push.js';
 import { Redirect } from 'react-router-dom';
-import Handler from '../OnlineHandler';
+import Handler from '../../onlineHandler';
 import Board from './Board';
 
 export default class OnlineBoard extends Board {
