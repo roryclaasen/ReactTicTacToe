@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 app.get([
 	'/',
 	'/play',
-	'/play/\\d{6}', // TODO Not sure if I need this or not
+	/\/play\/\d{6}/, // TODO Not sure if I need this or not
 	'/connect',
 	'/connect/username',
 	'/connect/token'
