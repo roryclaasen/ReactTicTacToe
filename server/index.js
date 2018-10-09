@@ -17,8 +17,8 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, '..', 'build')));
 app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 
-app.get('/', (req, res) => {
-	res.sendFile('index.html');
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 io.on('connection', (socket) => {
@@ -41,6 +41,22 @@ io.on('connection', (socket) => {
 		} catch (e) {
 			console.log('Error in \'%s\'', 'disconnect');
 			(console.error || console.log).call(console, e.stack || e);
+		}
+	});
+
+	socket.on(commands.lobby.exists, (tok, fn) => {
+		try {
+			fn(manager.getGame(tok));
+		} catch (e) {
+			console.log('Error in \'%s\'', commands.lobby.exists);
+			(console.error || console.log).call(console, e.stack || e);
+
+			fn({
+				error: {
+					type: 'stack',
+					stack: e
+				}
+			});
 		}
 	});
 
@@ -141,9 +157,11 @@ io.on('connection', (socket) => {
 	socket.on(commands.game.click, (data, fn) => {
 		try {
 			if (token !== data.token) return;
-
-			manager.getGame(token).click(data.sector, data.cell, socket.id);
-			io.in(token).emit(commands.game.update, manager.getGame(token).forClient());
+			const game = manager.getGame(token);
+			if (game !== undefined) {
+				manager.getGame(token).click(data.sector, data.cell, socket.id);
+				io.in(token).emit(commands.game.update, manager.getGame(token).forClient());
+			} else throw new Error('Game doesn\'t exist');
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.game.click);
 			(console.error || console.log).call(console, e.stack || e);

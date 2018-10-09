@@ -49,7 +49,8 @@ class GameManager {
 	}
 
 	getGame(token) {
-		return this.games[token];
+		if (token in this.games) return this.games[token];
+		return undefined;
 	}
 }
 

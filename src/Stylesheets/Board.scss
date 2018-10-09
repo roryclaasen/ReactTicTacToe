@@ -56,11 +56,21 @@ $player2: blue;
 				&.player2 { background: $player2; }
 			}
 		}
+
 		&.player1 .game-sector .game-cell.selectable:hover {
 			background: rgba($player1, 0.25); 
 		}
+
 		&.player2 .game-sector .game-cell.selectable:hover {
 			background: rgba($player2, 0.25); 
 		}
 	}
+}
+
+.game-toolbar {
+	width: fit-content;
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
+	margin: auto;
+	margin-top: 1em;
 }

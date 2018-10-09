@@ -8,7 +8,6 @@ export default class SocketClient {
 	constructor() {
 		this.socket = io();
 		this.gameData = undefined;
-		this.socketId = undefined;
 
 		this.updateGameHandler = undefined;
 
@@ -17,10 +16,13 @@ export default class SocketClient {
 		this.socket.on(commands.lobby.disconnected, this.updateGame);
 	}
 
-	setSocketId(id) {
-		if (this.socketId !== undefined) return;
-		this.socketId = id;
+	socketId = () => {
+		const match = document.cookie.match(new RegExp('(^| )io=([^;]+)'));
+		if (match) return match[2];
+		return undefined;
 	}
+
+	hasGame = (token) => new Promise((resolve) => this.socket.emit(commands.lobby.exists, token, (game) => resolve(game !== undefined)));
 
 	updateGame = (game) => {
 		if (this.token !== game.token) return;
@@ -34,7 +36,6 @@ export default class SocketClient {
 		if (!data.error) {
 			this.gameData = data;
 			this.token = data.token;
-			this.setSocketId(data.socketId);
 		} else {
 			izitoast.error({ message: 'Unable to create game, please try again' });
 			(console.error || console.log).call(console, 'Unable to create game, please try again');
@@ -42,7 +43,6 @@ export default class SocketClient {
 		}
 		cb(data);
 	});
-
 
 	joinGame = (username, token, cb) => {
 		this.token = token;
@@ -52,7 +52,6 @@ export default class SocketClient {
 		}, (data) => {
 			if (!data.error) {
 				this.updateGame(data);
-				this.setSocketId(data.socketId);
 			} else if (data.error.type === 'msg') {
 				izitoast.warning({
 					title: 'Unable to join game',

@@ -1,13 +1,25 @@
 import React from 'react';
+
 import Typography from '@material-ui/core/Typography';
 import Push from 'push.js';
+import { Redirect } from 'react-router-dom';
+import Handler from '../OnlineHandler';
 import Board from './Board';
 
-export default class OnlinceBoard extends Board {
+export default class OnlineBoard extends Board {
 	constructor(props) {
 		super(props);
 
+		Handler.changeToken(props.match.params.token);
+
 		this.clickHandler = this.clickHandler.bind(this);
+	}
+
+	render() {
+		if (!Handler.hasUsername || !Handler.hasToken) {
+			return <Redirect to="/connect" />;
+		}
+		return super.render();
 	}
 
 	updateData(game) {
@@ -80,6 +92,6 @@ export default class OnlinceBoard extends Board {
 		const location = e.target.dataset.location.split(',');
 		const sectorId = Number(location[0]);
 		const cellId = Number(location[1]);
-		this.props.click(sectorId, cellId, this.updateData);
+		Handler.socket.click(sectorId, cellId, this.updateData);
 	}
 }

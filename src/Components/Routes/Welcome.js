@@ -62,7 +62,7 @@ export default class Welcome extends Component {
 							Pass and Play
 						</Button>
 					</Link>
-					<Link to="/play" style={LinkButton}>
+					<Link to="/connect" style={LinkButton}>
 						<Button size="small" color="primary">
 							Play Online
 						</Button>

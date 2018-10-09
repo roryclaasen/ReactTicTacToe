@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import update from 'immutability-helper';
 
-import '../Stylesheets/Board.css';
+import '../../Stylesheets/Board.css';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -11,9 +11,9 @@ import CardContent from '@material-ui/core/CardContent';
 import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 
-import * as global from '../globals';
+import * as global from '../../globals';
 
-import BoardSector from './BoardSector';
+import BoardSector from '../BoardSector';
 
 export default class Board extends Component {
 	constructor(props) {
@@ -98,22 +98,33 @@ export default class Board extends Component {
 	}
 
 	toolBar() {
-		this.funcName = 'toolBar';
-
-		const LinkButton = {
-			textDecoration: 'none'
-		};
-
 		return (
 			<React.Fragment>
-				<Link to="/play" style={LinkButton}>
-					<Button>
-						New Game
-					</Button>
-				</Link>
-				<Link to="/" style={LinkButton}>
-					<Button>
-						Main Menu Game
+				<Button
+					style={{ textDecoration: 'none', paddingRight: '1em' }}
+					color="secondary"
+					onClick={() => {
+						const sectorList = [];
+						for (let i = 0; i < global.NO_SECTORS; i += 1) {
+							sectorList[i] = {
+								cells: new Array(global.NO_CELLS).fill(-1),
+								win: -1
+							};
+						}
+						this.setState({
+							sectors: sectorList,
+							sectorFinal: new Array(global.NO_CELLS).fill(-1),
+							win: -1,
+							current: 0,
+							currentSector: -1
+						});
+					}}
+				>
+					New Game
+				</Button>
+				<Link to="/" style={{ textDecoration: 'none' }}>
+					<Button color="primary">
+						Main Menu
 					</Button>
 				</Link>
 			</React.Fragment>
@@ -174,8 +185,8 @@ export default class Board extends Component {
 						</Grid>
 					</CardContent>
 				</Card>
-				<Card>
-					<CardContent>
+				<Card className="game-toolbar">
+					<CardContent style={{ paddingBottom: '16px' }}>
 						{toolbar}
 					</CardContent>
 				</Card>
