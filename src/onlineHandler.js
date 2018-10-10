@@ -13,19 +13,17 @@ class OnlineHandler {
 
 	hasGame = () => new Promise((resolve) => {
 		if (!this.hasUsername() || !this.hasToken()) resolve(false);
-		else this.socket.hasGame(this.token, (exists) => resolve(exists));
+		else {
+			this.socket.hasGame(this.token).then((exists) => resolve(exists)).catch(() => resolve(false));
+		}
 	});
 
-	changeToken(token) {
-		if (this.token === token) return;
-		if (!this.hasToken() && this.playing) {
-			this.socket.leaveGame(token);
-			this.playing = false;
-		}
+	changeToken = (token) => {
+		console.log(`Setting token to ${token}`);
 		this.token = token;
 	}
 
-	changeUsername(username) {
+	changeUsername = (username) => {
 		this.username = username;
 	}
 
@@ -73,7 +71,7 @@ class OnlineHandler {
 
 	leaveGame = () => {
 		this.socket.leaveGame(this.token);
-		this.token = undefined;
+		this.changeToken(undefined);
 		this.playing = false;
 	}
 
@@ -81,10 +79,6 @@ class OnlineHandler {
 		izitoast.error({ message: 'Unable to place tile' });
 		throw data;
 	});
-
-	setUpdate = (method) => {
-		this.socket.updateGameHandler = method;
-	}
 }
 
 const Handler = new OnlineHandler();

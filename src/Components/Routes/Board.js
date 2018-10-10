@@ -26,6 +26,7 @@ export default class Board extends Component {
 			};
 		}
 		this.state = {
+			update: 0,
 			sectors: sectorList,
 			sectorFinal: new Array(global.NO_CELLS).fill(-1),
 			win: -1,
@@ -38,6 +39,10 @@ export default class Board extends Component {
 		this.clickHandler = this.clickHandler.bind(this);
 	}
 
+	forceStateUpdate() {
+		const { update } = this.state;
+		this.setState({ update: update + 1 });
+	}
 
 	clickHandler(e) {
 		const { win, sectors, sectorFinal, current } = this.state;

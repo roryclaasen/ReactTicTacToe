@@ -12,12 +12,18 @@ import Board from './Board';
 export default class OnlineBoard extends Board {
 	constructor(props) {
 		super(props);
-
 		Handler.changeToken(props.match.params.token);
-		if (Handler.hasUsername() && Handler.hasGame()) {
-			Handler.setUpdate(this.updateData);
-		}
+		Handler.socket.updateGameHandler = this.updateData.bind(this);
 		this.clickHandler = this.clickHandler.bind(this);
+		if (Handler.hasUsername() && Handler.hasToken() && !Handler.waiting) { // && Handler.playing
+			Handler.joinGame().then((game) => {
+				Handler.socket.updateGameHandler = this.updateData.bind(this);
+				// this.forceStateUpdate();
+				this.updateData(game);
+			}).catch(() => {
+				// TODO Unable to join game
+			});
+		}
 	}
 
 	render() {
@@ -34,10 +40,11 @@ export default class OnlineBoard extends Board {
 		return super.render();
 	}
 
-	updateData(game) {
+	updateData = (game) => {
+		if (game.players.length === 2) Handler.waiting = false;
 		const old = this.state.current;
 		if (old !== game.current) {
-			const playerId = this.state.players.findIndex((p) => p.id === this.props.id);
+			const playerId = this.state.players.findIndex((p) => p.id === Handler.socket.socketId());
 			const isMe = playerId === game.current;
 			const opponent = this.state.players[this.state.current].username;
 			if (isMe) {
@@ -72,6 +79,8 @@ export default class OnlineBoard extends Board {
 			currentSector: game.currentSector,
 			players: game.players
 		});
+		console.log(this.state);
+		console.log(game);
 	}
 
 	toolBar() {
@@ -81,7 +90,7 @@ export default class OnlineBoard extends Board {
 				<Button
 					style={{ textDecoration: 'none', paddingRight: '1em' }}
 					color="secondary"
-					onClick={Handler.leaveGame()}
+					onClick={Handler.leaveGame}
 				>
 					Leave Game
 				</Button>
@@ -91,7 +100,7 @@ export default class OnlineBoard extends Board {
 
 	gameMessage() {
 		if (this.state.players === undefined) return super.gameMessage();
-		const playerId = this.state.players.findIndex((p) => p.id === this.props.id);
+		const playerId = this.state.players.findIndex((p) => p.id === Handler.socket.socketId());
 
 		const isMe = playerId === this.state.current;
 		const name = this.state.players[this.state.current].username;
@@ -119,6 +128,6 @@ export default class OnlineBoard extends Board {
 		const location = e.target.dataset.location.split(',');
 		const sectorId = Number(location[0]);
 		const cellId = Number(location[1]);
-		Handler.socket.click(sectorId, cellId, this.updateData);
+		Handler.socket.click(sectorId, cellId).then((data) => this.updateData(data));
 	}
 }

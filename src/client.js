@@ -3,6 +3,8 @@
 import io from 'socket.io-client';
 import * as commands from './socket.commands';
 
+import Handler from './onlineHandler';
+
 export default class SocketClient {
 	constructor() {
 		this.socket = io();
@@ -15,16 +17,17 @@ export default class SocketClient {
 		this.socket.on(commands.lobby.disconnected, this.updateGame);
 	}
 
-	socketId = () => {
-		const match = document.cookie.match(new RegExp('(^| )io=([^;]+)'));
-		if (match) return match[2];
-		return undefined;
-	}
+	socketId = () => this.socket.id;
 
-	hasGame = (token, callback) => this.socket.emit(commands.lobby.exists, token, (game) => callback(game !== undefined));
+	hasGame = (token) => new Promise((resolve) => {
+		this.socket.emit(commands.lobby.exists, token, (game) => {
+			if (game.error !== undefined) resolve(false);
+			else resolve(game !== undefined);
+		});
+	});
 
 	updateGame = (game) => {
-		if (this.gameData.token !== game.token) return; // TODO Test if needed
+		if (Handler.token !== game.token) return; // TODO Test if needed
 		this.gameData = game;
 		if (this.updateGameHandler !== undefined) {
 			this.updateGameHandler(this.gameData);
@@ -44,13 +47,14 @@ export default class SocketClient {
 	});
 
 	joinGame = (username, token) => new Promise((resolve, reject) => {
+		console.log(username, token);
 		this.socket.emit(commands.lobby.join, {
 			username,
 			token
 		}, (data) => {
 			if (!data.error) this.updateGame(data);
 			else if (data.error.type === 'msg') {
-				(console.warn || console.log).call(console, 'Unable to join game, please try again');
+				(console.warn || console.log).call(console, data.error.message);
 				reject(data);
 			} else {
 				(console.error || console.log).call(console, 'Unable to join game, please try again');

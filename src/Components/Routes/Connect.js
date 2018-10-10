@@ -12,6 +12,7 @@ export default class Connect extends Component {
 	}
 
 	componentDidMount() {
+		console.log(`connect ${Handler.token}`);
 		if (Handler.username === undefined) {
 			this.setState({ direct: '/connect/username' });
 			return;
@@ -21,8 +22,12 @@ export default class Connect extends Component {
 			return;
 		}
 		Handler.hasGame().then((exists) => {
-			if (exists) this.setState({ direct: `/play/${Handler.token}` });
-			else this.setState({ direct: '/connect/username' });
+			if (exists) {
+				this.setState({ direct: `/play/${Handler.token}` });
+			} else {
+				Handler.changeToken(undefined);
+				this.setState({ direct: '/connect/token' });
+			}
 		});
 	}
 

@@ -105,8 +105,8 @@ io.on('connection', (socket) => {
 			const { username } = data;
 			const ftoken = data.token;
 			if (manager.hasGame(ftoken)) {
-				token = ftoken;
-				manager.joinGame(token, username, socket.id, (game, isPlayer) => {
+				manager.joinGame(ftoken, username, socket.id, (game, isPlayer) => {
+					token = ftoken;
 					socket.join(token);
 
 					const gameReturn = game.forClient();

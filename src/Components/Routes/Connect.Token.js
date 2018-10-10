@@ -14,15 +14,14 @@ export default class ConnectToken extends Component {
 	constructor(props) {
 		super(props);
 
+		let { token } = Handler;
+		if (token === undefined) token = '';
+
 		this.state = {
 			update: 0,
-			token: '',
+			token,
 			help: 'Token needs to be 6 characters long'
 		};
-
-		if (Handler.token !== undefined) {
-			this.setState({ token: Handler.token });
-		}
 	}
 
 	tokenChange = (e) => {
@@ -36,12 +35,11 @@ export default class ConnectToken extends Component {
 		this.setState({ update: update + 1 });
 	});
 
-	joinGame = () => Handler.joinGame().then(() => {
+	joinGame = () => {
+		Handler.playing = true;
 		const { update } = this.state;
 		this.setState({ update: update + 1 });
-	}).catch(() => {
-		// TODO Might handle an error here
-	});
+	}
 
 	validToken() {
 		const { token } = this.state;
