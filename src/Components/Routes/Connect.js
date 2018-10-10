@@ -12,11 +12,11 @@ export default class Connect extends Component {
 	}
 
 	componentDidMount() {
-		if ((Handler.token !== undefined && Handler.username === undefined) || (Handler.token === undefined && Handler.username === undefined)) {
+		if (Handler.username === undefined) {
 			this.setState({ direct: '/connect/username' });
 			return;
 		}
-		if (Handler.token === undefined && Handler.username !== undefined) {
+		if (Handler.token === undefined) {
 			this.setState({ direct: '/connect/token' });
 			return;
 		}

@@ -23,7 +23,6 @@ class OnlineHandler {
 			this.playing = false;
 		}
 		this.token = token;
-		console.log(this.token);
 	}
 
 	changeUsername(username) {
