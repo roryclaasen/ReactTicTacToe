@@ -1,8 +1,11 @@
 import React from 'react';
 
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
 import Push from 'push.js';
 import { Redirect } from 'react-router-dom';
+
 import Handler from '../../onlineHandler';
 import Board from './Board';
 
@@ -11,13 +14,22 @@ export default class OnlineBoard extends Board {
 		super(props);
 
 		Handler.changeToken(props.match.params.token);
-
+		if (Handler.hasUsername() && Handler.hasGame()) {
+			Handler.setUpdate(this.updateData);
+		}
 		this.clickHandler = this.clickHandler.bind(this);
 	}
 
 	render() {
-		if (!Handler.hasUsername || !Handler.hasToken) {
+		if (!Handler.hasUsername() || !Handler.hasToken()) {
 			return <Redirect to="/connect" />;
+		}
+		if (Handler.waiting) {
+			return (
+				<React.Fragment>
+					<span>TODO: Write waiting page</span>
+				</React.Fragment>
+			);
 		}
 		return super.render();
 	}
@@ -60,6 +72,21 @@ export default class OnlineBoard extends Board {
 			currentSector: game.currentSector,
 			players: game.players
 		});
+	}
+
+	toolBar() {
+		this.funcName = 'toolBar';
+		return (
+			<React.Fragment>
+				<Button
+					style={{ textDecoration: 'none', paddingRight: '1em' }}
+					color="secondary"
+					onClick={Handler.leaveGame()}
+				>
+					Leave Game
+				</Button>
+			</React.Fragment>
+		);
 	}
 
 	gameMessage() {

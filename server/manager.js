@@ -19,7 +19,13 @@ class GameManager {
 	}
 
 	hasGame(token) {
+		if (token === null || token === undefined) return false;
 		return token in this.games;
+	}
+
+	getGame(token) {
+		if (this.hasGame(token)) return this.games[token];
+		throw new Error(`No Game exists with this token '${token}'`);
 	}
 
 	newGame(token, cb) {
@@ -40,17 +46,13 @@ class GameManager {
 	}
 
 	joinGame(token, username, uid, cb) {
+		if (!this.hasGame(token)) throw new Error(`No Game exists with this token '${token}'`);
 		const isPlayer = this.games[token].addPlayer(username, uid);
 		if (cb) cb(this.games[token], isPlayer);
 	}
 
 	removeGame(token) {
-		delete this.games[token];
-	}
-
-	getGame(token) {
-		if (token in this.games) return this.games[token];
-		return undefined;
+		if (this.hasGame(token)) delete this.games[token];
 	}
 }
 

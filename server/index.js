@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 app.get([
 	'/',
 	'/play',
-	/\/play\/\d{6}/, // TODO Not sure if I need this or not
+	/\/play\/\d{6}/,
 	'/connect',
 	'/connect/username',
 	'/connect/token'
@@ -35,13 +35,13 @@ io.on('connection', (socket) => {
 
 	socket.on('disconnect', () => {
 		try {
-			console.log('User Disconnected');
+			console.log('User Disconnected (%s)', socket.id);
 			if (token !== undefined) {
 				manager.getGame(token).removePlayer(socket.id);
 				io.in(token).emit(commands.lobby.disconnected, manager.getGame(token));
 
 				if (manager.getGame(token).players.length === 0) {
-					console.log('removing game %s', token);
+					console.log('Removing game %s', token);
 					manager.removeGame(token);
 				}
 			}
@@ -69,7 +69,12 @@ io.on('connection', (socket) => {
 
 	socket.on(commands.lobby.make, (username, fn) => {
 		try {
-			manager.make(socket.token, (game) => {
+			const oldGame = manager.isInGame(socket.id);
+			if (oldGame !== undefined) {
+				manager.removeGame(oldGame.token);
+				console.log('Removing game %s', oldGame.token);
+			}
+			manager.make(socket.id, (game) => {
 				game.addPlayer(username, socket.id);
 				socket.join(game.token);
 
@@ -150,7 +155,7 @@ io.on('connection', (socket) => {
 			console.log('%s leaving game %s', socket.id, token);
 
 			if (manager.getGame(token).players.length === 0) {
-				console.log('removing game %s', token);
+				console.log('Removing game %s', token);
 				manager.removeGame(token);
 			}
 

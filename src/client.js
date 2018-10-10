@@ -1,6 +1,5 @@
 /* eslint no-console: 0 */
 
-import izitoast from 'izitoast';
 import io from 'socket.io-client';
 import * as commands from './socket.commands';
 
@@ -22,70 +21,64 @@ export default class SocketClient {
 		return undefined;
 	}
 
-	hasGame = (token) => new Promise((resolve) => this.socket.emit(commands.lobby.exists, token, (game) => resolve(game !== undefined)));
+	hasGame = (token, callback) => this.socket.emit(commands.lobby.exists, token, (game) => callback(game !== undefined));
 
 	updateGame = (game) => {
-		if (this.token !== game.token) return;
+		if (this.gameData.token !== game.token) return; // TODO Test if needed
 		this.gameData = game;
 		if (this.updateGameHandler !== undefined) {
 			this.updateGameHandler(this.gameData);
 		}
 	}
 
-	createGame = (username, cb) => this.socket.emit(commands.lobby.make, username, (data) => {
-		if (!data.error) {
-			this.gameData = data;
-			this.token = data.token;
-		} else {
-			izitoast.error({ message: 'Unable to create game, please try again' });
-			(console.error || console.log).call(console, 'Unable to create game, please try again');
-			// console.log(data.error.stack);
-		}
-		cb(data);
+	createGame = (username) => new Promise((resolve, reject) => {
+		this.socket.emit(commands.lobby.make, username, (data) => {
+			if (!data.error) this.gameData = data;
+			else {
+				(console.error || console.log).call(console, 'Unable to create game, please try again');
+				// console.log(data.error.stack);
+				reject(data);
+			}
+			resolve(data);
+		});
 	});
 
-	joinGame = (username, token, cb) => {
-		this.token = token;
+	joinGame = (username, token) => new Promise((resolve, reject) => {
 		this.socket.emit(commands.lobby.join, {
 			username,
 			token
 		}, (data) => {
-			if (!data.error) {
-				this.updateGame(data);
-			} else if (data.error.type === 'msg') {
-				izitoast.warning({
-					title: 'Unable to join game',
-					message: data.error.message
-				});
-				console.log('WARN: Unable to join game, please try again');
+			if (!data.error) this.updateGame(data);
+			else if (data.error.type === 'msg') {
+				(console.warn || console.log).call(console, 'Unable to join game, please try again');
+				reject(data);
 			} else {
-				izitoast.error({ message: 'Unable to join game, please try again' });
 				(console.error || console.log).call(console, 'Unable to join game, please try again');
 				// console.log(data.error.stack);
+				reject(data);
 			}
-			cb(data);
+			resolve(data);
 		});
-	}
+	});
 
-	leaveGame = () => {
-		this.socket.emit(commands.lobby.leave, this.token);
+	leaveGame = (token) => {
+		this.socket.emit(commands.lobby.leave, token);
 		this.gameData = undefined;
 	}
 
-	click = (sector, cell, cb) => {
+	click = (sector, cell) => new Promise((resolve, reject) => {
 		this.socket.emit(commands.game.click, {
 			token: this.token,
 			sector,
 			cell
 		}, (data) => {
-			if (!data.error) {
-				this.gameData = data;
-			} else {
-				izitoast.error({ message: 'Unable to place tile' });
+			if (!data.error) this.gameData = data;
+			else {
 				(console.error || console.log).call(console, 'Unable to place tile');
 				// console.log(data.error.stack);
+				reject(data);
 			}
-			cb(data);
+			resolve(data);
 		});
-	}
+	});
 }

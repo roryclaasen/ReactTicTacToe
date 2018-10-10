@@ -15,6 +15,7 @@ export default class ConnectToken extends Component {
 		super(props);
 
 		this.state = {
+			update: 0,
 			token: '',
 			help: 'Token needs to be 6 characters long'
 		};
@@ -30,13 +31,25 @@ export default class ConnectToken extends Component {
 		Handler.changeToken(value);
 	}
 
+	createGame = () => Handler.createGame().then(() => {
+		const { update } = this.state;
+		this.setState({ update: update + 1 });
+	});
+
+	joinGame = () => Handler.joinGame().then(() => {
+		const { update } = this.state;
+		this.setState({ update: update + 1 });
+	}).catch(() => {
+		// TODO Might handle an error here
+	});
+
 	validToken() {
 		const { token } = this.state;
 		return token.length === 6;
 	}
 
 	render() {
-		if (Handler.username === undefined) {
+		if (Handler.username === undefined || Handler.playing || Handler.waiting) {
 			return <Redirect to="/connect" />;
 		}
 		const { token, help } = this.state;
@@ -77,20 +90,12 @@ export default class ConnectToken extends Component {
 							Change Username
 						</Button>
 					</Link>
-					<Button color="primary">
+					<Button color="primary" onClick={this.createGame}>
 						Create a Game
 					</Button>
-					<Link
-						to="/connect"
-						style={{ textDecoration: 'none' }}
-						onClick={(e) => {
-							if (!this.validToken()) e.preventDefault();
-						}}
-					>
-						<Button color="primary" disabled={!this.validToken()}>
-							Join Game
-						</Button>
-					</Link>
+					<Button color="primary" onClick={this.joinGame} disabled={!this.validToken()}>
+						Join Game
+					</Button>
 				</CardActions>
 			</Card>
 		);
