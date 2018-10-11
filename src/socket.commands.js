@@ -3,7 +3,8 @@ module.exports = {
 		make: 'lobby.make',
 		join: 'lobby.join',
 		leave: 'lobby.leave',
-		disconnected: 'lobby.left'
+		disconnected: 'lobby.left',
+		exists: 'loby.exists'
 	},
 	game: {
 		started: 'game.start',

@@ -27,9 +27,5 @@ export default class ThemeManager extends Component {
 }
 
 ThemeManager.propTypes = {
-	children: PropTypes.array
-};
-
-ThemeManager.defaultProps = {
-	children: undefined
+	children: PropTypes.object.isRequired
 };

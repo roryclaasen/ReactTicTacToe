@@ -31,14 +31,6 @@ $player2: blue;
 		.game-sector {
 			display: inline-block;
 			border: 2px solid black;
-			&.final, &.disabled {
-				&, .game-cell { cursor: default; }
-			}
-			&.disabled {
-				background-color: rgba(0, 0, 0, 0.3);
-				.game-cell { opacity: 0.8; }
-			}
-			&.final { border-width: 4px; }
 	
 			.game-cell {
 				display: inline-block;
@@ -55,12 +47,33 @@ $player2: blue;
 				&.player1 { background: $player1; }
 				&.player2 { background: $player2; }
 			}
+
+			&.final { border-width: 4px; }
+
+			&.final, &.disabled {
+				&, .game-cell { cursor: default; }
+			}
+			
+			&.disabled {
+				background-color: rgba(0, 0, 0, 0.3);
+				.game-cell { opacity: 0.8; }
+			}
 		}
+
 		&.player1 .game-sector .game-cell.selectable:hover {
 			background: rgba($player1, 0.25); 
 		}
+
 		&.player2 .game-sector .game-cell.selectable:hover {
 			background: rgba($player2, 0.25); 
 		}
 	}
+}
+
+.game-toolbar {
+	width: fit-content;
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
+	margin: auto;
+	margin-top: 1em;
 }

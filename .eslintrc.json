@@ -24,6 +24,7 @@
 		"semi": "error",
 		"object-curly-newline": "off",
 		"no-restricted-syntax": "off",
+		"prefer-destructuring": ["error", {"object": true, "array": false}],
 		"react/jsx-filename-extension": "off",
 		"react/jsx-indent": ["error", "tab"],
 		"react/jsx-indent-props": ["error", "tab"],

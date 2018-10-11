@@ -18,15 +18,13 @@ export default class BoardCell extends Component {
 }
 
 BoardCell.propTypes = {
-	value: PropTypes.number,
+	value: PropTypes.number.isRequired,
 	valid: PropTypes.bool,
-	location: PropTypes.string,
+	location: PropTypes.string.isRequired,
 	onClick: PropTypes.func
 };
 
 BoardCell.defaultProps = {
-	value: -1,
 	valid: true,
-	location: '',
 	onClick: undefined
 };

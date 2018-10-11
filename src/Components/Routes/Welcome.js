@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+
+import { Link } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -7,14 +8,18 @@ import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
-import '../Stylesheets/Welcome.css';
+import '../../Stylesheets/Welcome.css';
 
 export default class Welcome extends Component {
 	render() {
 		const headingStyle = {
 			fontWeight: 'normal'
 		};
-		const { playOffline, playOnline } = this.props;
+
+		const LinkButton = {
+			textDecoration: 'none'
+		};
+
 		return (
 			<Card className="welcomeCard">
 				<CardContent>
@@ -53,24 +58,18 @@ export default class Welcome extends Component {
 					</Typography>
 				</CardContent>
 				<CardActions>
-					<Button size="small" color="primary" onClick={playOffline}>
-						Pass and Play
-					</Button>
-					<Button size="small" color="primary" onClick={playOnline}>
-						Play Online
-					</Button>
+					<Link to="/play" style={LinkButton}>
+						<Button size="small" color="primary">
+							Pass and Play
+						</Button>
+					</Link>
+					<Link to="/connect" style={LinkButton}>
+						<Button size="small" color="primary">
+							Play Online
+						</Button>
+					</Link>
 				</CardActions>
 			</Card>
 		);
 	}
 }
-
-Welcome.propTypes = {
-	playOffline: PropTypes.func,
-	playOnline: PropTypes.func,
-};
-
-Welcome.defaultProps = {
-	playOffline: undefined,
-	playOnline: undefined
-};
