@@ -1,20 +1,32 @@
 import React from 'react';
 
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-
-import Push from 'push.js';
 import { Redirect } from 'react-router-dom';
 
+import Push from 'push.js';
+
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+import DialogMessage from '../DialogMessage';
 import Handler from '../../onlineHandler';
 import Board from './Board';
 
 export default class OnlineBoard extends Board {
 	constructor(props) {
 		super(props);
+
 		Handler.changeToken(props.match.params.token);
 		Handler.socket.updateGameHandler = this.updateData.bind(this);
+
+		Push.Permission.request(() => { /* onGranted */ }, () => { /* onDenied */ });
+
 		this.clickHandler = this.clickHandler.bind(this);
+
 		if (Handler.hasUsername() && Handler.hasToken() && !Handler.waiting) { // && Handler.playing
 			Handler.joinGame().then((game) => {
 				Handler.socket.updateGameHandler = this.updateData.bind(this);
@@ -31,9 +43,60 @@ export default class OnlineBoard extends Board {
 			return <Redirect to="/connect" />;
 		}
 		if (Handler.waiting) {
+			const { dialog, update } = this.state;
 			return (
 				<React.Fragment>
-					<span>TODO: Write waiting page</span>
+					<Card>
+						<CardContent style={{ textAlign: 'center' }}>
+							<Typography gutterBottom variant="display1" component="h1" color="inherit">
+								{Handler.username}
+							</Typography>
+							<Grid container justify="center">
+								<Grid item>
+									<Typography gutterBottom variant="subheading">
+										Waiting for opponent to join
+									</Typography>
+									<Typography gutterBottom variant="subheading">
+										Share the game token bellow with you opponent so they can join
+									</Typography>
+									<Typography gutterBottom variant="display1">
+										{Handler.token}
+									</Typography>
+									<Typography gutterBottom variant="subheading">
+										Or share the url bellow with you opponent so they can join
+									</Typography>
+									<Typography gutterBottom variant="display1">
+										{window.location.href}
+									</Typography>
+								</Grid>
+							</Grid>
+							<LinearProgress variant="query" color="secondary" />
+						</CardContent>
+						<CardActions>
+							<Button
+								color="primary"
+								onClick={() => {
+									this.setState({
+										update: update + 1,
+										dialog: {
+											open: true,
+											title: 'Leave lobby',
+											message: 'Are you sure you want to leave the lobby',
+											agree: 'Yes',
+											disagree: 'No',
+											action: () => {
+												Handler.leaveGame();
+												this.forceStateUpdate();
+											}
+										}
+									});
+								}}
+							>
+								Leave
+							</Button>
+						</CardActions>
+					</Card>
+					<DialogMessage all={dialog} key={update} />
 				</React.Fragment>
 			);
 		}
@@ -43,7 +106,9 @@ export default class OnlineBoard extends Board {
 	updateData = (game) => {
 		if (game.players.length === 2) Handler.waiting = false;
 		if (game.players.length !== 2 && !Handler.waiting) {
+			const { update } = this.state;
 			this.setState({
+				update: update + 1,
 				dialog: {
 					open: true,
 					title: 'Game Over',
@@ -98,16 +163,23 @@ export default class OnlineBoard extends Board {
 			<React.Fragment>
 				<Button
 					color="secondary"
-					onClick={() => this.setState({
-						dialog: {
-							open: true,
-							title: 'Are you sure you want to leave?',
-							message: 'You are currently in a game',
-							agree: 'Yes',
-							disagree: 'No, continue playing',
-							action: () => Handler.leaveGame()
-						}
-					})}
+					onClick={() => {
+						const { update } = this.state;
+						this.setState({
+							update: update + 1,
+							dialog: {
+								open: true,
+								title: 'Are you sure you want to leave?',
+								message: 'You are currently in a game',
+								agree: 'Yes',
+								disagree: 'No, continue playing',
+								action: () => {
+									Handler.leaveGame();
+									this.forceStateUpdate();
+								}
+							}
+						});
+					}}
 				>
 					Leave Game
 				</Button>

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+
 import Grid from '@material-ui/core/Grid';
 
 import ThemeManager from '../Theme';
 import Welcome from './Welcome';
 import Board from './Board';
+import OnlineBoard from './OnlineBoard';
 import Connect from './Connect';
 import ConnectUsername from './Connect.Username';
 import ConnectToken from './Connect.Token';
-import OnlineBoard from './OnlineBoard';
 
 import '../../Stylesheets/App.css';
 import 'izitoast/dist/css/iziToast.min.css';
