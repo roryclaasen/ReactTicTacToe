@@ -28,6 +28,17 @@ $player2: blue;
 			padding: 2em;
 		}
 
+		&:not(.final) {
+			&.player1 {
+				border-color: $player1;
+				box-shadow: 0 0 10px $player1;
+			}
+			&.player2 {
+				border-color: $player2;
+				box-shadow: 0 0 10px $player2;
+			}
+		}
+
 		.game-sector {
 			display: inline-block;
 			border: 2px solid black;

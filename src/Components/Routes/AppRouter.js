@@ -12,9 +12,6 @@ import Connect from './Connect';
 import ConnectUsername from './Connect.Username';
 import ConnectToken from './Connect.Token';
 
-import '../../Stylesheets/App.css';
-import 'izitoast/dist/css/iziToast.min.css';
-
 export default class AppRouter extends Component {
 	render() {
 		return (
@@ -24,9 +21,8 @@ export default class AppRouter extends Component {
 					direction="row"
 					justify="center"
 					alignItems="center"
-					className="AppContainer"
 				>
-					<Grid item className="AppItem" xs={10} md={8}>
+					<Grid item xs={10} md={8}>
 						<Router>
 							<Switch>
 								<Route exact path="/" component={Welcome} />

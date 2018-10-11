@@ -8,16 +8,10 @@ import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
-import '../../Stylesheets/Welcome.css';
-
 export default class Welcome extends Component {
 	render() {
 		const headingStyle = {
 			fontWeight: 'normal'
-		};
-
-		const LinkButton = {
-			textDecoration: 'none'
 		};
 
 		return (
@@ -58,16 +52,12 @@ export default class Welcome extends Component {
 					</Typography>
 				</CardContent>
 				<CardActions>
-					<Link to="/play" style={LinkButton}>
-						<Button size="small" color="primary">
-							Pass and Play
-						</Button>
-					</Link>
-					<Link to="/connect" style={LinkButton}>
-						<Button size="small" color="primary">
-							Play Online
-						</Button>
-					</Link>
+					<Button size="small" color="primary" component={Link} to="/play">
+						Pass and Play
+					</Button>
+					<Button size="small" color="primary" component={Link} to="/connect">
+						Play Online
+					</Button>
 				</CardActions>
 			</Card>
 		);

@@ -14,8 +14,6 @@ import * as global from '../../globals';
 import DialogMessage from '../DialogMessage';
 import BoardSector from '../Board/BoardSector';
 
-import '../../Stylesheets/Board.css';
-
 export default class Board extends Component {
 	constructor(props) {
 		super(props);
@@ -110,8 +108,9 @@ export default class Board extends Component {
 		return (
 			<React.Fragment>
 				<Button
-					style={{ textDecoration: 'none', paddingRight: '1em' }}
+					style={{ textDecoration: 'none', marginRight: '1em' }}
 					color="secondary"
+					variant="outlined"
 					onClick={() => {
 						const { update } = this.state;
 						this.setState({
@@ -146,6 +145,7 @@ export default class Board extends Component {
 				</Button>
 				<Button
 					color="primary"
+					variant="outlined"
 					onClick={() => {
 						const { update } = this.state;
 						this.setState({

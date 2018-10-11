@@ -58,22 +58,21 @@ export default class ConnectUsername extends Component {
 					/>
 				</CardContent>
 				<CardActions>
-					<Link to="/" style={{ textDecoration: 'none' }}>
-						<Button color="primary">
-							Main Menu
-						</Button>
-					</Link>
-					<Link
-						to="/connect"
-						style={{ textDecoration: 'none' }}
-						onClick={(e) => {
-							if (!this.validUsername()) e.preventDefault();
-						}}
+					<Button
+						color="primary"
+						component={Link}
+						to="/"
 					>
-						<Button color="primary" disabled={!this.validUsername()}>
-							Continue
-						</Button>
-					</Link>
+						Main Menu
+					</Button>
+					<Button
+						color="primary"
+						disabled={!this.validUsername()}
+						component={Link}
+						to="/connect"
+					>
+						Continue
+					</Button>
 				</CardActions>
 			</Card>
 		);

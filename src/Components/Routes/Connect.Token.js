@@ -79,16 +79,12 @@ export default class ConnectToken extends Component {
 					/>
 				</CardContent>
 				<CardActions>
-					<Link to="/" style={{ textDecoration: 'none' }}>
-						<Button color="primary">
-							Main Menu
-						</Button>
-					</Link>
-					<Link to="/connect/username" style={{ textDecoration: 'none' }}>
-						<Button color="primary">
-							Change Username
-						</Button>
-					</Link>
+					<Button color="primary" component={Link} to="/">
+						Main Menu
+					</Button>
+					<Button color="primary" component={Link} to="/connect/username">
+						Change Username
+					</Button>
 					<Button color="primary" onClick={this.createGame}>
 						Create a Game
 					</Button>

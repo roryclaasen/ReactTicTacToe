@@ -43,7 +43,7 @@
 		"stylelint-scss": "^3.3.1"
 	},
 	"scripts": {
-		"watch:css": "npm run build:css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+		"watch:css": "npm run build:css && node-sass-chokidar --output-style compressed --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
 		"watch:js": "node ./scripts/watch",
 		"start:local": "concurrently \"npm:watch:css\" \"npm:start:js\"",
 		"start:server": "node server",
@@ -51,7 +51,7 @@
 		"start:dev": "concurrently \"npm:watch:js\" \"npm:start:server\"",
 		"start:js": "react-scripts start",
 		"start": "npm run start:server",
-		"build:css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+		"build:css": "node-sass-chokidar --output-style compressed --include-path ./src --include-path ./node_modules src/ -o src/",
 		"build:js": "react-scripts build",
 		"build": "npm-run-all build:css build:js",
 		"lint:js": "eslint src/**/*.js server/**/*.js",
