@@ -12,7 +12,6 @@ export default class Connect extends Component {
 	}
 
 	componentDidMount() {
-		console.log(`connect ${Handler.token}`);
 		if (Handler.username === undefined) {
 			this.setState({ direct: '/connect/username' });
 			return;

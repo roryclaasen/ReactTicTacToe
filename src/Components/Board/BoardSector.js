@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import * as global from '../globals';
+import * as global from '../../globals';
 
 import BoardCell from './BoardCell';
 
@@ -45,16 +45,14 @@ export default class BoardSector extends Component {
 }
 
 BoardSector.propTypes = {
-	cells: PropTypes.array,
-	sector: PropTypes.number,
+	cells: PropTypes.array.isRequired,
+	sector: PropTypes.number.isRequired,
 	click: PropTypes.func,
 	currentSector: PropTypes.number,
 	className: PropTypes.string
 };
 
 BoardSector.defaultProps = {
-	cells: [],
-	sector: -1,
 	click: undefined,
 	currentSector: -1,
 	className: ''

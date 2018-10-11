@@ -1,6 +1,6 @@
 import izitoast from 'izitoast';
 
-import SocketClient from './client';
+import SocketClient from './socket';
 
 class OnlineHandler {
 	constructor() {
@@ -19,7 +19,6 @@ class OnlineHandler {
 	});
 
 	changeToken = (token) => {
-		console.log(`Setting token to ${token}`);
 		this.token = token;
 	}
 
@@ -54,7 +53,6 @@ class OnlineHandler {
 		if (this.token !== data.token) throw data;
 		this.waiting = false;
 		this.playing = true;
-		// TODO Update Game
 		return data;
 	}).catch((data) => {
 		this.waiting = false;
@@ -73,6 +71,7 @@ class OnlineHandler {
 		this.socket.leaveGame(this.token);
 		this.changeToken(undefined);
 		this.playing = false;
+		this.waiting = false;
 	}
 
 	click = (sector, cell) => this.socket.click(sector, cell).catch((data) => {

@@ -42,11 +42,23 @@ export default class OnlineBoard extends Board {
 
 	updateData = (game) => {
 		if (game.players.length === 2) Handler.waiting = false;
+		if (game.players.length !== 2 && !Handler.waiting) {
+			this.setState({
+				dialog: {
+					open: true,
+					title: 'Game Over',
+					message: 'Your opponent left the game :(',
+					agree: 'Okay',
+					action: () => Handler.leaveGame()
+				}
+			});
+			return;
+		}
 		const old = this.state.current;
 		if (old !== game.current) {
-			const playerId = this.state.players.findIndex((p) => p.id === Handler.socket.socketId());
+			const playerId = game.players.findIndex((p) => p.id === Handler.socket.socketId());
 			const isMe = playerId === game.current;
-			const opponent = this.state.players[this.state.current].username;
+			const opponent = game.players[playerId === 0 ? 1 : 0].username;
 			if (isMe) {
 				let promise;
 				if (this.state.win !== -1) {
@@ -66,7 +78,6 @@ export default class OnlineBoard extends Board {
 
 				promise.then((notification) => {
 					window.focus();
-					document.focus();
 					notification.close();
 				});
 			}
@@ -79,8 +90,6 @@ export default class OnlineBoard extends Board {
 			currentSector: game.currentSector,
 			players: game.players
 		});
-		console.log(this.state);
-		console.log(game);
 	}
 
 	toolBar() {
@@ -88,9 +97,17 @@ export default class OnlineBoard extends Board {
 		return (
 			<React.Fragment>
 				<Button
-					style={{ textDecoration: 'none', paddingRight: '1em' }}
 					color="secondary"
-					onClick={Handler.leaveGame}
+					onClick={() => this.setState({
+						dialog: {
+							open: true,
+							title: 'Are you sure you want to leave?',
+							message: 'You are currently in a game',
+							agree: 'Yes',
+							disagree: 'No, continue playing',
+							action: () => Handler.leaveGame()
+						}
+					})}
 				>
 					Leave Game
 				</Button>

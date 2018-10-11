@@ -3,17 +3,22 @@ import React, { Component } from 'react';
 
 import '../../Stylesheets/Board.css';
 
+import { Redirect } from 'react-router-dom';
+
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
-import { Link } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { Button } from '@material-ui/core';
 
 import * as global from '../../globals';
 
-import BoardSector from '../BoardSector';
+import BoardSector from '../Board/BoardSector';
 
 export default class Board extends Component {
 	constructor(props) {
@@ -31,7 +36,15 @@ export default class Board extends Component {
 			sectorFinal: new Array(global.NO_CELLS).fill(-1),
 			win: -1,
 			current: 0,
-			currentSector: -1
+			currentSector: -1,
+			dialog: {
+				open: false,
+				title: '',
+				message: '',
+				agree: 'Yes',
+				disagree: 'No'
+			},
+			toolbarAction: undefined
 		};
 
 		this.baseState = this.state;
@@ -39,9 +52,19 @@ export default class Board extends Component {
 		this.clickHandler = this.clickHandler.bind(this);
 	}
 
-	forceStateUpdate() {
-		const { update } = this.state;
-		this.setState({ update: update + 1 });
+	handleDialogClose = (agreed) => {
+		const { dialog } = this.state;
+		if (agreed === true) dialog.action();
+		this.setState({
+			dialog: {
+				open: false,
+				title: dialog.title,
+				message: dialog.message,
+				agree: dialog.agree,
+				disagree: dialog.disagree,
+				action: undefined
+			}
+		});
 	}
 
 	clickHandler(e) {
@@ -108,36 +131,70 @@ export default class Board extends Component {
 				<Button
 					style={{ textDecoration: 'none', paddingRight: '1em' }}
 					color="secondary"
-					onClick={() => {
-						const sectorList = [];
-						for (let i = 0; i < global.NO_SECTORS; i += 1) {
-							sectorList[i] = {
-								cells: new Array(global.NO_CELLS).fill(-1),
-								win: -1
-							};
+					onClick={() => this.setState({
+						dialog: {
+							open: true,
+							title: 'Are you sure you start a new game?',
+							message: 'You will lose all progress',
+							agree: 'Yes',
+							disagree: 'No, continue playing',
+							action: () => {
+								const sectorList = [];
+								for (let i = 0; i < global.NO_SECTORS; i += 1) {
+									sectorList[i] = {
+										cells: new Array(global.NO_CELLS).fill(-1),
+										win: -1
+									};
+								}
+								this.setState({
+									sectors: sectorList,
+									sectorFinal: new Array(global.NO_CELLS).fill(-1),
+									win: -1,
+									current: 0,
+									currentSector: -1
+								});
+							}
 						}
-						this.setState({
-							sectors: sectorList,
-							sectorFinal: new Array(global.NO_CELLS).fill(-1),
-							win: -1,
-							current: 0,
-							currentSector: -1
-						});
-					}}
+					})}
 				>
 					New Game
 				</Button>
-				<Link to="/" style={{ textDecoration: 'none' }}>
-					<Button color="primary">
-						Main Menu
-					</Button>
-				</Link>
+				<Button
+					color="primary"
+					onClick={() => this.setState({
+						dialog: {
+							open: true,
+							title: 'Are you sure you want to leave?',
+							message: 'You are currently in a game',
+							agree: 'Yes',
+							disagree: 'No, continue playing',
+							action: () => {
+								this.setState({
+									toolbarAction: {
+										action: 'redirect',
+										to: '/'
+									}
+								});
+							}
+						}
+					})}
+				>
+					Main Menu
+				</Button>
 			</React.Fragment>
 		);
 	}
 
+	forceStateUpdate() {
+		const { update } = this.state;
+		this.setState({ update: update + 1 });
+	}
+
 	render() {
-		const { sectors, currentSector, win, current, sectorFinal } = this.state;
+		const { sectors, currentSector, win, current, sectorFinal, dialog, toolbarAction } = this.state;
+		if (toolbarAction !== undefined) {
+			if (toolbarAction.action === 'redirect') return <Redirect to={toolbarAction.to} />;
+		}
 		const sectorsList = [];
 		for (let i = 0; i < global.NO_SECTORS; i += 1) {
 			const key = `s${i}`;
@@ -185,6 +242,7 @@ export default class Board extends Component {
 								<BoardSector
 									cells={sectorFinal}
 									className="final"
+									sector={-1}
 								/>
 							</Grid>
 						</Grid>
@@ -195,6 +253,29 @@ export default class Board extends Component {
 						{toolbar}
 					</CardContent>
 				</Card>
+				<Dialog
+					open={dialog.open}
+					onClose={this.handleDialogClose}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">{dialog.title}</DialogTitle>
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							{dialog.message}
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						{dialog.disagree !== undefined && (
+							<Button onClick={this.handleDialogClose} color="primary">
+								{dialog.disagree}
+							</Button>
+						)}
+						<Button onClick={() => this.handleDialogClose(true)} color="primary" autoFocus>
+							{dialog.agree}
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</React.Fragment>
 		);
 	}

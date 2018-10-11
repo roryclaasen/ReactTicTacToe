@@ -29,10 +29,10 @@ export default class AppRouter extends Component {
 							<Switch>
 								<Route exact path="/" component={Welcome} />
 								<Route exact path="/play" component={Board} />
+								<Route exact path="/play/:token" component={OnlineBoard} />
 								<Route exact path="/connect" component={Connect} />
 								<Route exact path="/connect/username" component={ConnectUsername} />
 								<Route exact path="/connect/token" component={ConnectToken} />
-								<Route exact path="/play/:token" component={OnlineBoard} />
 
 								<Redirect to="/" />
 							</Switch>

@@ -47,7 +47,6 @@ export default class SocketClient {
 	});
 
 	joinGame = (username, token) => new Promise((resolve, reject) => {
-		console.log(username, token);
 		this.socket.emit(commands.lobby.join, {
 			username,
 			token
@@ -72,7 +71,7 @@ export default class SocketClient {
 
 	click = (sector, cell) => new Promise((resolve, reject) => {
 		this.socket.emit(commands.game.click, {
-			token: this.token,
+			token: Handler.token,
 			sector,
 			cell
 		}, (data) => {
