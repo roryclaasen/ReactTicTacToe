@@ -46,7 +46,7 @@ export default class DialogMessage extends Component {
 				</DialogContent>
 				<DialogActions>
 					{disagree !== undefined && (
-						<Button onClick={this.handleDialogClose} color="primary">
+						<Button onClick={this.handleDialogClose} color="secondary">
 							{disagree}
 						</Button>
 					)}

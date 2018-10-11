@@ -2,11 +2,19 @@
 
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500';
 
+/*! reacttictactoe | MIT License */
+
 body {
 	font-family: 'Roboto', sans-serif;
 }
 
-.AppContainer {
+#root {
 	min-height: 100vh;
-	// .AppItem { margin: 1em 2em; }
+	padding: 2em 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	@import 'welcome';
+	@import 'board';
 }

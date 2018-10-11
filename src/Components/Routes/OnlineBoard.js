@@ -3,6 +3,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import Push from 'push.js';
+import copy from 'copy-to-clipboard';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -11,6 +12,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import DialogMessage from '../DialogMessage';
 import Handler from '../../onlineHandler';
@@ -32,8 +34,6 @@ export default class OnlineBoard extends Board {
 				Handler.socket.updateGameHandler = this.updateData.bind(this);
 				// this.forceStateUpdate();
 				this.updateData(game);
-			}).catch(() => {
-				// TODO Unable to join game
 			});
 		}
 	}
@@ -65,13 +65,20 @@ export default class OnlineBoard extends Board {
 									<Typography gutterBottom variant="subheading">
 										Or share the url bellow with you opponent so they can join
 									</Typography>
-									<Typography gutterBottom variant="display1">
-										{window.location.href}
-									</Typography>
+									<Tooltip title="Copy To Clipboard">
+										<Button
+											variant="outlined"
+											size="large"
+											color="primary"
+											onClick={() => copy(window.location.href)}
+										>
+											{window.location.href}
+										</Button>
+									</Tooltip>
 								</Grid>
 							</Grid>
-							<LinearProgress variant="query" color="secondary" />
 						</CardContent>
+						<LinearProgress variant="query" color="secondary" style={{ height: '0.5em', minHeight: '5px' }} />
 						<CardActions>
 							<Button
 								color="primary"
@@ -92,7 +99,7 @@ export default class OnlineBoard extends Board {
 									});
 								}}
 							>
-								Leave
+								Leave Lobby
 							</Button>
 						</CardActions>
 					</Card>
@@ -105,7 +112,7 @@ export default class OnlineBoard extends Board {
 
 	updateData = (game) => {
 		if (game.players.length === 2) Handler.waiting = false;
-		if (game.players.length !== 2 && !Handler.waiting) {
+		else if (!Handler.waiting) {
 			const { update } = this.state;
 			this.setState({
 				update: update + 1,
@@ -163,6 +170,7 @@ export default class OnlineBoard extends Board {
 			<React.Fragment>
 				<Button
 					color="secondary"
+					variant="outlined"
 					onClick={() => {
 						const { update } = this.state;
 						this.setState({
