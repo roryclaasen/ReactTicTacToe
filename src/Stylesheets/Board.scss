@@ -31,14 +31,6 @@ $player2: blue;
 		.game-sector {
 			display: inline-block;
 			border: 2px solid black;
-			&.final, &.disabled {
-				&, .game-cell { cursor: default; }
-			}
-			&.disabled {
-				background-color: rgba(0, 0, 0, 0.3);
-				.game-cell { opacity: 0.8; }
-			}
-			&.final { border-width: 4px; }
 	
 			.game-cell {
 				display: inline-block;
@@ -54,6 +46,17 @@ $player2: blue;
 				&.selectable { cursor: pointer; }
 				&.player1 { background: $player1; }
 				&.player2 { background: $player2; }
+			}
+
+			&.final { border-width: 4px; }
+
+			&.final, &.disabled {
+				&, .game-cell { cursor: default; }
+			}
+			
+			&.disabled {
+				background-color: rgba(0, 0, 0, 0.3);
+				.game-cell { opacity: 0.8; }
 			}
 		}
 
