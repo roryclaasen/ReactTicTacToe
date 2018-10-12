@@ -26,7 +26,7 @@ export default class BoardSector extends Component {
 		const rowsList = [];
 		for (let r = 0; r < global.NO_CELLS; r += global.NO_IN_ROW) {
 			rowsList.push(
-				<div className="game-sector-row" key={r}>
+				<div key={r}>
 					{cellsList[r + 0]}
 					{cellsList[r + 1]}
 					{cellsList[r + 2]}
@@ -34,7 +34,7 @@ export default class BoardSector extends Component {
 			);
 		}
 		let cssClass = 'game-sector';
-		if (className === 'final') cssClass += ' final';
+		if (className !== undefined) cssClass += ` ${className}`;
 		if (!validSector) cssClass += ' disabled';
 		return (
 			<div className={cssClass}>

@@ -13,13 +13,15 @@ class OnlineHandler {
 
 	hasGame = () => new Promise((resolve) => {
 		if (!this.hasUsername() || !this.hasToken()) resolve(false);
-		else {
-			this.socket.hasGame(this.token).then((exists) => resolve(exists)).catch(() => resolve(false));
-		}
+		else this.socket.hasGame(this.token).then((exists) => resolve(exists)).catch(() => resolve(false));
 	});
 
 	changeToken = (token) => {
 		this.token = token;
+		if (token === undefined) {
+			this.playing = false;
+			this.waiting = false;
+		}
 	}
 
 	changeUsername = (username) => {

@@ -8,6 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import * as global from '../../globals';
 
@@ -38,7 +43,8 @@ export default class Board extends Component {
 				agree: 'Yes',
 				disagree: 'No'
 			},
-			toolbarAction: undefined
+			toolbarAction: undefined,
+			showHelp: false
 		};
 
 		this.baseState = this.state;
@@ -107,6 +113,15 @@ export default class Board extends Component {
 	toolBar() {
 		return (
 			<React.Fragment>
+				<Button
+					style={{ textDecoration: 'none', marginRight: '1em' }}
+					color="primary"
+					variant="outlined"
+					onClick={() => this.setState({ showHelp: true })
+					}
+				>
+					Rules Of Play
+				</Button>
 				<Button
 					style={{ textDecoration: 'none', marginRight: '1em' }}
 					color="secondary"
@@ -180,7 +195,7 @@ export default class Board extends Component {
 	}
 
 	render() {
-		const { sectors, currentSector, win, current, sectorFinal, toolbarAction, update, dialog } = this.state;
+		const { sectors, currentSector, win, current, sectorFinal, toolbarAction, update, dialog, showHelp } = this.state;
 		if (toolbarAction !== undefined) {
 			if (toolbarAction.action === 'redirect') return <Redirect to={toolbarAction.to} />;
 		}
@@ -243,6 +258,27 @@ export default class Board extends Component {
 					</CardContent>
 				</Card>
 				<DialogMessage all={dialog} key={update} />
+				<Dialog
+					open={showHelp}
+					onClose={() => this.setState({ showHelp: false })}
+					scroll="paper"
+				>
+					<DialogTitle>Rules of Play</DialogTitle>
+					<DialogContent>
+						<DialogContentText component="ol">
+							<li>The first player may place an &quot;X&quot; in any cell within any mini-square on the board.</li>
+							<li>The selected cell position within this mini-square corresponds to the mini-square position within the greater-square where the second player must then place an &quot;O&quot;.</li>
+							<li>Thereafter, the two players take turns placing their mark in any unfilled cell within the mini-square dictated by the cell position marked by the previous player. For the first player, this mini-square will be outlined in red.</li>
+							<li>The first tic-tac-toe winner in a mini-square remains the winner in that mini-square for the remainder of the game.</li>
+							<li>If a player is sent to a mini-square in which all the cells are filled, the player may next place his mark in any unfilled cell in any other mini-board.</li>
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={() => this.setState({ showHelp: false })} color="primary">
+							Close
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</React.Fragment>
 		);
 	}

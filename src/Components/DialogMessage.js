@@ -7,6 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Slide from '@material-ui/core/Slide';
+
+function Transition(props) {
+	return <Slide direction="up" {...props} />;
+}
 
 export default class DialogMessage extends Component {
 	constructor(props) {
@@ -22,7 +27,7 @@ export default class DialogMessage extends Component {
 
 	handleDialogClose = (agreed) => {
 		const { action } = this.state;
-		if (agreed === true) action();
+		if (agreed === true && action !== undefined) action();
 		this.setState({
 			open: false,
 			action: undefined
@@ -35,15 +40,19 @@ export default class DialogMessage extends Component {
 			<Dialog
 				open={open}
 				onClose={this.handleDialogClose}
+				TransitionComponent={Transition}
+				keepMounted
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 			>
 				<DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-				<DialogContent>
-					<DialogContentText id="alert-dialog-description">
-						{message}
-					</DialogContentText>
-				</DialogContent>
+				{message !== undefined && (
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							{message}
+						</DialogContentText>
+					</DialogContent>
+				)}
 				<DialogActions>
 					{disagree !== undefined && (
 						<Button onClick={this.handleDialogClose} color="secondary">

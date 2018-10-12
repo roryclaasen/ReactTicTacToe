@@ -131,7 +131,7 @@ export default class OnlineBoard extends Board {
 			const playerId = game.players.findIndex((p) => p.id === Handler.socket.socketId());
 			const isMe = playerId === game.current;
 			const opponent = game.players[playerId === 0 ? 1 : 0].username;
-			if (isMe) {
+			if (isMe && Push.Permission.has()) {
 				let promise;
 				if (this.state.win !== -1) {
 					promise = Push.create(`${isMe ? `${opponent} has` : 'You have'} won the game!`, {
@@ -168,6 +168,15 @@ export default class OnlineBoard extends Board {
 		this.funcName = 'toolBar';
 		return (
 			<React.Fragment>
+				<Button
+					style={{ textDecoration: 'none', marginRight: '1em' }}
+					color="primary"
+					variant="outlined"
+					onClick={() => this.setState({ showHelp: true })
+					}
+				>
+					Rules Of Play
+				</Button>
 				<Button
 					color="secondary"
 					variant="outlined"
