@@ -19,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 
 app.get([
 	'/',
+	'/about',
 	'/play',
 	/\/play\/\d{6}/,
 	'/connect',
@@ -27,6 +28,11 @@ app.get([
 ], (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
+
+app.get('/license', (req, res) => {
+	res.sendFile(path.join(__dirname, '..', 'LICENSE.md'));
+});
+
 
 io.on('connection', (socket) => {
 	let token;
