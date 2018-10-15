@@ -14,7 +14,6 @@ class Game {
 			};
 		}
 		this.sectors = sectorList;
-		this.sectorFinal = new Array(globals.NO_CELLS).fill(-1);
 		this.win = -1;
 		this.current = 0;
 		this.currentSector = -1;
@@ -47,6 +46,14 @@ class Game {
 		}
 	}
 
+	sectorFinal() {
+		const array = new Array(globals.NO_CELLS).fill(-1);
+		for (let i = 0; i < globals.NO_CELLS; i += 1) {
+			array[i] = this.sectors[i].win;
+		}
+		return array;
+	}
+
 	click(sectorId, cellId, clientId) {
 		const player = this.players[this.current];
 		// May throw if current is not 0/1
@@ -67,21 +74,21 @@ class Game {
 			const sectorWinner = globals.CalculateWinner(sector.cells);
 			if (sectorWinner !== null) {
 				sector.win = sectorWinner;
-				this.sectorFinal[sectorId] = sectorWinner;
 			}
 		}
 
 		let gameWinner = -1;
 		if (this.win === -1) {
-			gameWinner = globals.CalculateWinner(this.sectorFinal);
+			gameWinner = globals.CalculateWinner(this.sectorFinal());
 			if (gameWinner !== null) {
 				this.win = gameWinner;
 			}
 		}
 
 		let full = true;
-		for (let i = 0; i < sector.cells.length; i += 1) {
-			if (sector.cells[i] === -1) {
+		const nextCells = this.sectors[this.currentSector].cells;
+		for (let i = 0; i < nextCells.length; i += 1) {
+			if (nextCells[i] === -1) {
 				full = false;
 				break;
 			}
@@ -92,13 +99,14 @@ class Game {
 		this.sectors[sectorId] = sector;
 	}
 
-	forClient() {
+	export() {
+		const sectorFinal = this.sectorFinal();
 		return {
 			token: this.token,
 			players: this.players,
 			spectators: this.spectators,
 			sectors: this.sectors,
-			sectorFinal: this.sectorFinal,
+			sectorFinal,
 			win: this.win,
 			current: this.current,
 			currentSector: this.currentSector

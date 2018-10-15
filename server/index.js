@@ -19,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'node_modules', 'push.js', 'bin')));
 
 app.get([
 	'/',
+	'/about',
 	'/play',
 	/\/play\/\d{6}/,
 	'/connect',
@@ -27,6 +28,11 @@ app.get([
 ], (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
+
+app.get('/license', (req, res) => {
+	res.sendFile(path.join(__dirname, '..', 'LICENSE.md'));
+});
+
 
 io.on('connection', (socket) => {
 	let token;
@@ -38,7 +44,7 @@ io.on('connection', (socket) => {
 			console.log('User Disconnected (%s)', socket.id);
 			if (token !== undefined) {
 				manager.getGame(token).removePlayer(socket.id);
-				io.in(token).emit(commands.lobby.disconnected, manager.getGame(token));
+				io.in(token).emit(commands.lobby.disconnected, manager.getGame(token).export());
 
 				if (manager.getGame(token).players.length === 0) {
 					console.log('Removing game %s', token);
@@ -53,7 +59,7 @@ io.on('connection', (socket) => {
 
 	socket.on(commands.lobby.exists, (tok, fn) => {
 		try {
-			fn(manager.getGame(tok));
+			fn(manager.getGame(tok).export());
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.lobby.exists);
 			(console.error || console.log).call(console, e.stack || e);
@@ -80,10 +86,7 @@ io.on('connection', (socket) => {
 
 				token = game.token; // eslint-disable-line prefer-destructuring
 
-				const gameReturn = game.forClient();
-				gameReturn.socketId = socket.id;
-
-				fn(gameReturn);
+				fn(game.export());
 
 				console.log('%s has made a new game %s', socket.id, token);
 			});
@@ -109,13 +112,10 @@ io.on('connection', (socket) => {
 					token = ftoken;
 					socket.join(token);
 
-					const gameReturn = game.forClient();
-					gameReturn.socketId = socket.id;
-
-					fn(gameReturn);
+					fn(game.export());
 
 					if (isPlayer) {
-						io.in(token).emit(commands.game.started, game);
+						io.in(token).emit(commands.game.started, game.export());
 						console.log('%s has joined game %s as a player', socket.id, token);
 					} else {
 						console.log('%s has joined game %s as a spectator', socket.id, token);
@@ -149,7 +149,7 @@ io.on('connection', (socket) => {
 			if (token !== dToken) return;
 
 			manager.getGame(token).removePlayer(socket.id);
-			socket.to(token).emit(commands.lobby.disconnected, manager.getGame(token).forClient());
+			socket.to(token).emit(commands.lobby.disconnected, manager.getGame(token).export());
 			socket.leave(token);
 
 			console.log('%s leaving game %s', socket.id, token);
@@ -172,7 +172,7 @@ io.on('connection', (socket) => {
 			const game = manager.getGame(token);
 			if (game !== undefined) {
 				manager.getGame(token).click(data.sector, data.cell, socket.id);
-				io.in(token).emit(commands.game.update, manager.getGame(token).forClient());
+				io.in(token).emit(commands.game.update, manager.getGame(token).export());
 			} else throw new Error('Game doesn\'t exist');
 		} catch (e) {
 			console.log('Error in \'%s\'', commands.game.click);

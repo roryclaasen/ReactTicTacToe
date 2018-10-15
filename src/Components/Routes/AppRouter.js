@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import ThemeManager from '../Theme';
 import Welcome from './Welcome';
+import About from './About';
 import Board from './Board';
 import OnlineBoard from './OnlineBoard';
 import Connect from './Connect';
@@ -26,6 +27,7 @@ export default class AppRouter extends Component {
 						<Router>
 							<Switch>
 								<Route exact path="/" component={Welcome} />
+								<Route exact path="/about" component={About} />
 								<Route exact path="/play" component={Board} />
 								<Route exact path="/play/:token" component={OnlineBoard} />
 								<Route exact path="/connect" component={Connect} />

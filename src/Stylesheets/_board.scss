@@ -4,11 +4,10 @@ $player2: blue;
 
 .game-container {
 	margin: auto;
-	// padding: 1em;
+	padding: 1em;
 	width: max-content;
 	width: -moz-max-content;
 	width: -webkit-max-content;
-	padding: 1em;
 
 	.game-message {
 		text-align: center;
@@ -18,7 +17,6 @@ $player2: blue;
 	.game-table {
 		user-select: none;
 		border: 2px solid black;
-		// min-width: calc(((#{$cell-size} + 2px) * 9) + 4px);
 		min-width: max-content;
 		min-width: -moz-max-content;
 		min-width: -webkit-max-content;

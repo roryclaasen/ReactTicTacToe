@@ -27,7 +27,8 @@ export default class SocketClient {
 	});
 
 	updateGame = (game) => {
-		if (Handler.token !== game.token) return; // TODO Test if needed
+		console.log(game);
+		if (Handler.token !== game.token) return;
 		this.gameData = game;
 		if (this.updateGameHandler !== undefined) {
 			this.updateGameHandler(this.gameData);

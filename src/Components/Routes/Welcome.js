@@ -52,11 +52,14 @@ export default class Welcome extends Component {
 					</Typography>
 				</CardContent>
 				<CardActions>
-					<Button size="small" color="primary" component={Link} to="/play">
+					<Button color="primary" component={Link} to="/play">
 						Pass and Play
 					</Button>
-					<Button size="small" color="primary" component={Link} to="/connect">
+					<Button color="primary" component={Link} to="/connect">
 						Play Online
+					</Button>
+					<Button color="primary" component={Link} to="/about">
+						About the App
 					</Button>
 				</CardActions>
 			</Card>
