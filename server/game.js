@@ -86,8 +86,9 @@ class Game {
 		}
 
 		let full = true;
-		for (let i = 0; i < sector.cells.length; i += 1) {
-			if (sector.cells[i] === -1) {
+		const nextCells = this.sectors[this.currentSector].cells;
+		for (let i = 0; i < nextCells.length; i += 1) {
+			if (nextCells[i] === -1) {
 				full = false;
 				break;
 			}
