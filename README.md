@@ -4,10 +4,8 @@ Based off my old java project [Tic Tac Toe (java)](https://github.com/roryclaase
 
 ## Play
 
-You can play the game online in your browser [here](https://roryclaasen.github.io/ReactTicTacToe).
+You can play the game online in your browser [here](https://u-tictactoe.herokuapp.com).
 Note that there may be increased page loading time on first load as the server may need to start.
-
-[Development server](https://roryclaasen.github.io/ReactTicTacToe-dev) (Test the latest features or it may not even work yet)
 
 ## About
 
@@ -38,8 +36,8 @@ The objective of this game is to be the first to win three tic-tac-toe games lyi
 
 | Branch | Travis CI | Server |
 |:-------|:----------|:-------|
-| [Production](https://github.com/roryclaasen/ReactTicTacToe/tree/dev) | [![Build Status][CI-master]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | [Heroku](https://roryclaasen.github.io/ReactTicTacToe) |
-| [Development](https://github.com/roryclaasen/ReactTicTacToe/tree/dev)    | [![Build Status][CI-dev]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | [Heroku](https://roryclaasen.github.io/ReactTicTacToe-dev) |
+| [Production](https://github.com/roryclaasen/ReactTicTacToe/tree/dev) | [![Build Status][CI-master]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | [Heroku](https://github.com/roryclaasen/TicTacToe) |
+| [Development](https://github.com/roryclaasen/ReactTicTacToe/tree/dev)    | [![Build Status][CI-dev]](https://travis-ci.org/roryclaasen/ReactTicTacToe) | |
 
 ## License
 
